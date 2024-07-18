@@ -6,5 +6,5 @@ using UnityEngine.SceneManagement;
 public static class GlobalSwitch
 {
     public static bool _DisplaysFPS = true;
-    public static string _SwitchingScenes = "Start";
+    public static string SwitchingScenes = "Start";
 }

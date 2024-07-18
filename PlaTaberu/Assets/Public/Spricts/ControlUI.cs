@@ -3,14 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Carrot
+public class ControlUI : MonoBehaviour
 {
-    public static class UI
-    {
-        public static GameObject Spawn(GameObject prefab)
-        {
+    [SerializeField, Header("ここにcanvasを格納")]
+    private RectTransform canvas;
 
-            return null;
-        }
+    //UIのプレハブを座標を指定して簡単に複製
+    public void SetUI(GameObject ui, Vector2 point)
+    {
+        Instantiate(ui, point, Quaternion.identity, canvas);
+    }
+    //UIのプレハブを座標を指定せず簡単に複製
+    public void SetUI(GameObject ui)
+    {
+        Instantiate(ui, canvas);
+    }
+
+    //シーンを切り替える
+    public void SwitchScene(string sceneName)
+    {
+        GlobalSwitch.SwitchingScenes = sceneName;
+        this.SetUI((GameObject)Resources.Load("Nawata/Transition"));
     }
 }

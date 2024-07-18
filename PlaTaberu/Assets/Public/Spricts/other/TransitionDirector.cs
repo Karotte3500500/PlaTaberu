@@ -20,6 +20,6 @@ public class TransitionDirector : MonoBehaviour
         image.color = color;
 
         if (color.a >= 1)
-            SceneManager.LoadScene(GlobalSwitch._SwitchingScenes);
+            SceneManager.LoadScene(GlobalSwitch.SwitchingScenes);
     }
 }

@@ -8,6 +8,7 @@ namespace GameCharacterManagement
     //ベルの設定***************************************************************************************
     public class Belu : Plataberu
     {
+        public override int ID { get { return 1; } }
         public override string Name { get { return "ベル"; } }
         public override string Explanation { get { return "プラタベルの子供、プラスチックを食べて育つ "; } }
         public override int Tier { get { return 1; } }
@@ -25,6 +26,7 @@ namespace GameCharacterManagement
     //ケイの設定***************************************************************************************
     public class Kei : Plataberu
     {
+        public override int ID { get { return 2; } }
         public override string Name { get { return "ケイ"; } }
         public override string Explanation { get { return "自然の中で育ったプラタベル。群れで暮らす。"; } }
         public override int Tier { get { return 2; } }
@@ -44,6 +46,7 @@ namespace GameCharacterManagement
     //バハムートの設定***************************************************************************************
     public class Vaha : Plataberu
     {
+        public override int ID { get { return 4; } }
         public override string Name { get { return "バハムート"; } }
         public override string Explanation { get { return "翼で空を飛び、火を吹く。"; } }
         public override int Tier { get { return 3; } }
@@ -63,6 +66,7 @@ namespace GameCharacterManagement
     //コナの設定***************************************************************************************
     public class Cona : Plataberu
     {
+        public override int ID { get { return 5; } }
         public override string Name { get { return "コナ"; } }
         public override string Explanation { get { return "少し先の未来を予知することができる。 "; } }
         public override int Tier { get { return 3; } }
@@ -84,6 +88,7 @@ namespace GameCharacterManagement
     //リリーの設定***************************************************************************************
     public class Lily : Plataberu
     {
+        public override int ID { get { return 6; } }
         public override string Name { get { return "リリー"; } }
         public override string Explanation { get { return "人懐っこい性格。触るとふわふわしている。"; } }
         public override int Tier { get { return 3; } }
@@ -102,6 +107,7 @@ namespace GameCharacterManagement
     //ニナの設定***************************************************************************************
     public class Nina : Plataberu
     {
+        public override int ID { get { return 3; } }
         public override string Name { get { return "ニナ"; } }
         public override string Explanation { get { return "人と育ったプラタベル。言葉を話すことができる。 "; } }
         public override int Tier { get { return 2; } }
@@ -121,6 +127,7 @@ namespace GameCharacterManagement
     //デュランダルの設定***************************************************************************************
     public class Dhura : Plataberu
     {
+        public override int ID { get { return 7; } }
         public override string Name { get { return "デュランダル"; } }
         public override string Explanation { get { return "「聖剣」の二つ名を持つプラタベル。正義感あふれる性格。"; } }
         public override int Tier { get { return 3; } }
@@ -144,6 +151,7 @@ namespace GameCharacterManagement
     //エリザベートの設定***************************************************************************************
     public class Eri : Plataberu
     {
+        public override int ID { get { return 8; } }
         public override string Name { get { return "エリザベート"; } }
         public override string Explanation { get { return "赤いプラスチックが好きなプラタベル。太陽が苦手。インドア派。"; } }
         public override int Tier { get { return 3; } }
@@ -169,6 +177,7 @@ namespace GameCharacterManagement
     //オーディンの設定***************************************************************************************
     public class Odin : Plataberu
     {
+        public override int ID { get { return 9; } }
         public override string Name { get { return "オーディン"; } }
         public override string Explanation { get { return "馬に乗り、大地を駆け、槍で敵を刺し貫く。"; } }
         public override int Tier { get { return 3; } }
@@ -191,6 +200,7 @@ namespace GameCharacterManagement
     //プラタベルの定義***************************************************************************************
     public class Plataberu
     {
+        public virtual int ID { get { return 0; } }
         //プラタベルの名前
         public virtual string Name { get { return "ベル"; } }
         //プラタベルの説明
@@ -208,6 +218,10 @@ namespace GameCharacterManagement
         public float Grp { get; private set; }
         //次のレベルまでに必要な成長値 - 変更禁止
         public float TargetGrp { get { return 100 * (((float)this.Level / 10) + 1); } }
+        //現在の成長値の割合（GRPバー用）
+        public float GrpRatio { get { return Grp / TargetGrp; } }
+        //前のレベル
+        public int OldLevel { get; private set; }
         //現在のレベル - 変更禁止
         public int Level { get; private set; }
         //成長に必要なレベル
@@ -265,18 +279,18 @@ namespace GameCharacterManagement
         //レベルと経験値の処理をする。上がったレベルを返す
         public int LevelUp()
         {
-            int oldLevel = this.Level;
+            this.OldLevel = this.Level;
             this.Grp = this.TotalGrp;
 
             for (this.Level = 0; this.Grp >= this.TargetGrp; this.Level++)
             {
                 this.Grp -= this.TargetGrp;
 
-                if (oldLevel < this.Level)
+                if (this.OldLevel <= this.Level)
                     GrowStatus();
             }
 
-            return this.Level - oldLevel;
+            return this.Level - this.OldLevel;
         }
 
         //戦闘時の動き

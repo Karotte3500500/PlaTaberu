@@ -1,18 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using GameCharacterManagement;
 
-public class ServerCommunication : MonoBehaviour
+public static class ServerCommunication
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public static Plataberu _MyCharacter;
+    public static Plataberu _EnemyCharacter;
 }

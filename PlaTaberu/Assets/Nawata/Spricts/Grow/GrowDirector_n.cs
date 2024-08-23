@@ -12,6 +12,9 @@ public class GrowDirector_n : MonoBehaviour
     [SerializeField]
     private Text pointNum;
 
+    [SerializeField]
+    private Text charName;
+
     private void Start()
     {
         controlUI = FindObjectOfType<ControlUI>();
@@ -20,5 +23,6 @@ public class GrowDirector_n : MonoBehaviour
     private void Update()
     {
         plaNum.text = $"{CharacterData._PlasticNum}";
+        charName.text = $"{CharacterData._Plataberu.Name} lv.{CharacterData._Plataberu.Level}";
     }
 }

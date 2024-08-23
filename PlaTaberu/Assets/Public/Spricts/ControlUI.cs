@@ -9,14 +9,14 @@ public class ControlUI : MonoBehaviour
     private RectTransform canvas;
 
     //UIのプレハブを座標を指定して簡単に複製
-    public void SetUI(GameObject ui, Vector2 point)
+    public GameObject SetUI(GameObject ui, Vector2 point)
     {
-        Instantiate(ui, point, Quaternion.identity, canvas);
+        return Instantiate(ui, point, Quaternion.identity, canvas);
     }
     //UIのプレハブを座標を指定せず簡単に複製
-    public void SetUI(GameObject ui)
+    public GameObject SetUI(GameObject ui)
     {
-        Instantiate(ui, canvas);
+        return Instantiate(ui, canvas);
     }
 
     //シーンを切り替える

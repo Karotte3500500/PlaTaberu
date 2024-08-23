@@ -2,23 +2,56 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using GameCharacterManagement;
 
 public class Feed_n : MonoBehaviour
 {
+    private ControlUI controlUI;
+    private Plataberu myChara = CharacterData._Plataberu;
+    private int upLevel;
+
     [SerializeField]
     private Button feedBotton;
+    [SerializeField]
+    private GameObject lvUpUI;
 
-    public int cost = 99;
+    private GameObject lvUpUIobj;
+    private int count = 0;
+    public int cost = 10;
 
-    void Update()
+    private void Start()
     {
-        if(CharacterData._PlasticNum < cost)
+        controlUI = FindObjectOfType<ControlUI>();
+    }
+
+    private void Update()
+    {
+        if (upLevel == 0)
         {
-            feedBotton.interactable = false;
+            if (CharacterData._PlasticNum < cost)
+            {
+                feedBotton.interactable = false;
+            }
+            else
+            {
+                feedBotton.interactable = true;
+            }
+        }
+        else if(count < 80)
+        {
+            if (count == 0)
+            {
+                lvUpUIobj = controlUI.SetUI(lvUpUI);
+                feedBotton.interactable = false;
+                Debug.Log(myChara.DebugString());
+            }
+            count++;
         }
         else
         {
-            feedBotton.interactable = true;
+            Destroy(lvUpUIobj);
+            count = 0;
+            upLevel = 0;
         }
     }
 
@@ -26,6 +59,7 @@ public class Feed_n : MonoBehaviour
     {
 
         CharacterData._PlasticNum -= cost;
-
+        myChara.AddGrp(cost);
+        upLevel = myChara.LevelUp();
     }
 }

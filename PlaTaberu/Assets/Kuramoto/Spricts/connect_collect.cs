@@ -9,7 +9,6 @@ using System.Net.Sockets;
 
 public class connect_collect : MonoBehaviour
 {
-
     public Button ConnectButton;
 
     // Start is called before the first frame update

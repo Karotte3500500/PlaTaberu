@@ -1155,7 +1155,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   feedBotton: {fileID: 2124106008}
   lvUpUI: {fileID: 6289243784370298053, guid: fcfa652f913ac3246b40a799b1a2d224, type: 3}
-  cost: 300
+  cost: 50
 --- !u!1 &1112889046
 GameObject:
   m_ObjectHideFlags: 0
@@ -2200,7 +2200,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Battle
+          m_StringArgument: ToBattle
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1971127067

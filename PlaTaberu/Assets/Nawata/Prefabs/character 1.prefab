@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9133535517275457755}
-  - component: {fileID: 1421983829791164749}
+  - component: {fileID: 6629032281294675107}
   m_Layer: 0
-  m_Name: character
+  m_Name: character 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1421983829791164749
+--- !u!114 &6629032281294675107
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,22 +41,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 709540045362950431}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a1bcaf522a6c8547931d48ecbda3336, type: 3}
+  m_Script: {fileID: 11500000, guid: 6f1eb8da41244124584e0cd9ce1e062c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  plataberus:
-  - {fileID: 8690484708452802775, guid: 9b4a5a5dfe6c2ab4aadf51e91e71cdfb, type: 3}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 8601472847330614848, guid: 0505844c60a56fe48ae82df30735978f, type: 3}
-  CharacterAnimation: 0
-  CharacterFace: 1
-  Exclamation: 0
-  Question: 0
-  tere: 0
-  douyo: 0
+  plataberus: []
+  CharcterAnimation: 0

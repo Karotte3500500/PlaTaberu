@@ -14,6 +14,8 @@ public class Feed_n : MonoBehaviour
     private Button feedBotton;
     [SerializeField]
     private GameObject lvUpUI;
+    [SerializeField]
+    private GameObject charImg;
 
     private GameObject lvUpUIobj;
     private int count = 0;
@@ -58,6 +60,7 @@ public class Feed_n : MonoBehaviour
     public void Feed()
     {
 
+        charImg.GetComponent<CharacterManager_n>().CharacterAnimation = 3;
         CharacterData._PlasticNum -= cost;
         myChara.AddGrp(cost);
         upLevel = myChara.LevelUp();

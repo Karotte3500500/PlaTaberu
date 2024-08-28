@@ -8,15 +8,15 @@ namespace GameCharacterManagement
     //ベルの設定***************************************************************************************
     public class Belu : Plataberu
     {
-        public override int ID { get { return 1; } }
-        public override string Name { get { return "ベル"; } }
-        public override string Explanation { get { return "プラタベルの子供、プラスチックを食べて育つ "; } }
-        public override int Tier { get { return 1; } }
-        public override Ratio GrowthRatio {  get { return new Ratio(1.0f, 1.0f, 1.0f); } }
+        public override int ID => 1;
+        public override string Name => "ベル";
+        public override string Explanation => "プラタベルの子供、プラスチックを食べて育つ ";
+        public override int Tier => 1; 
+        public override Ratio GrowthRatio => new Ratio(1.0f, 1.0f, 1.0f);
         public override Command BattleCommand { get; set; } = new Command(4, 4, 0);
-        public override int NextLevel { get { return 15; } }
+        public override int NextLevel => 15;
 
-        public override string SkillName { get { return "なにもしない"; } }
+        public override string SkillName => "なにもしない";
         public override void Skill(Plataberu enemy)
         {
             base.Skill(enemy);
@@ -26,15 +26,15 @@ namespace GameCharacterManagement
     //ケイの設定***************************************************************************************
     public class Kei : Plataberu
     {
-        public override int ID { get { return 2; } }
-        public override string Name { get { return "ケイ"; } }
-        public override string Explanation { get { return "自然の中で育ったプラタベル。群れで暮らす。"; } }
-        public override int Tier { get { return 2; } }
-        public override Ratio GrowthRatio { get { return new Ratio(2.5f, 1.0f, 1.5f); } }
+        public override int ID => 2;
+        public override string Name => "ケイ";
+        public override string Explanation => "自然の中で育ったプラタベル。群れで暮らす。";
+        public override int Tier => 2;
+        public override Ratio GrowthRatio => new Ratio(2.5f, 1.0f, 1.5f);
         public override Command BattleCommand { get; set; } = new Command(3, 4, 2);
-        public override int NextLevel { get { return 30; } }
+        public override int NextLevel => 30;
 
-        public override string SkillName { get { return "ほえる"; } }
+        public override string SkillName => "ほえる";
         public override void Skill(Plataberu enemy)
         {
             Status cof = enemy.BattleCoefficient;
@@ -46,15 +46,15 @@ namespace GameCharacterManagement
     //バハムートの設定***************************************************************************************
     public class Vaha : Plataberu
     {
-        public override int ID { get { return 4; } }
-        public override string Name { get { return "バハムート"; } }
-        public override string Explanation { get { return "翼で空を飛び、火を吹く。"; } }
-        public override int Tier { get { return 3; } }
-        public override Ratio GrowthRatio { get { return new Ratio(3.5f, 2.0f, 1.5f); } }
+        public override int ID => 4;
+        public override string Name => "バハムート";
+        public override string Explanation => "翼で空を飛び、火を吹く。";
+        public override int Tier => 3;
+        public override Ratio GrowthRatio => new Ratio(3.5f, 2.0f, 1.5f);
         public override Command BattleCommand { get; set; } = new Command(2, 3, 10);
-        public override int NextLevel { get { return 1000; } }
+        public override int NextLevel => 1000;
 
-        public override string SkillName { get { return "カタストロフ"; } }
+        public override string SkillName => "カタストロフ";
         public override void Skill(Plataberu enemy)
         {
             Status st = enemy.BattleStatus;
@@ -66,16 +66,16 @@ namespace GameCharacterManagement
     //コナの設定***************************************************************************************
     public class Cona : Plataberu
     {
-        public override int ID { get { return 5; } }
-        public override string Name { get { return "コナ"; } }
-        public override string Explanation { get { return "少し先の未来を予知することができる。 "; } }
-        public override int Tier { get { return 3; } }
-        public override Ratio GrowthRatio { get { return new Ratio(1f, 2f, 1.5f); } }
+        public override int ID => 5;
+        public override string Name => "コナ";
+        public override string Explanation => "少し先の未来を予知することができる。 ";
+        public override int Tier => 3;
+        public override Ratio GrowthRatio => new Ratio(1f, 2f, 1.5f);
         public override Command BattleCommand { get; set; } = new Command(2, 3, 3);
-        public override int NextLevel { get { return 1000; } }
+        public override int NextLevel => 1000;
 
-        public override int BaseCritical { get { return 20; } }
-        public override string SkillName { get { return "真経津鏡"; } }
+        public override int BaseCritical => 20;
+        public override string SkillName => "真経津鏡";
         public override void Skill(Plataberu enemy)
         {
             this.BattleCritical = 100;
@@ -88,15 +88,15 @@ namespace GameCharacterManagement
     //リリーの設定***************************************************************************************
     public class Lily : Plataberu
     {
-        public override int ID { get { return 6; } }
-        public override string Name { get { return "リリー"; } }
-        public override string Explanation { get { return "人懐っこい性格。触るとふわふわしている。"; } }
-        public override int Tier { get { return 3; } }
-        public override Ratio GrowthRatio { get { return new Ratio(1f, 1.5f, 4f); } }
+        public override int ID => 6;
+        public override string Name => "リリー";
+        public override string Explanation => "人懐っこい性格。触るとふわふわしている。";
+        public override int Tier => 3;
+        public override Ratio GrowthRatio => new Ratio(1f, 1.5f, 4f);
         public override Command BattleCommand { get; set; } = new Command(3, 4, 5);
-        public override int NextLevel { get { return 1000; } }
+        public override int NextLevel => 1000;
 
-        public override string SkillName { get { return "ダイヤモンドリリー"; } }
+        public override string SkillName => "ダイヤモンドリリー";
         public override void Skill(Plataberu enemy)
         {
             //ほりゅう
@@ -107,15 +107,15 @@ namespace GameCharacterManagement
     //ニナの設定***************************************************************************************
     public class Nina : Plataberu
     {
-        public override int ID { get { return 3; } }
-        public override string Name { get { return "ニナ"; } }
-        public override string Explanation { get { return "人と育ったプラタベル。言葉を話すことができる。 "; } }
-        public override int Tier { get { return 2; } }
-        public override Ratio GrowthRatio { get { return new Ratio(1.5f, 1.5f, 2f); } }
+        public override int ID => 3;
+        public override string Name => "ニナ";
+        public override string Explanation => "人と育ったプラタベル。言葉を話すことができる。 ";
+        public override int Tier => 2;
+        public override Ratio GrowthRatio => new Ratio(1.5f, 1.5f, 2f);
         public override Command BattleCommand { get; set; } = new Command(4, 3, 5);
-        public override int NextLevel { get { return 30; } }
+        public override int NextLevel => 30;
 
-        public override string SkillName { get { return "休む"; } }
+        public override string SkillName => "休む";
         public override void Skill(Plataberu enemy)
         {
             Status mySt = this.BattleStatus;
@@ -127,15 +127,15 @@ namespace GameCharacterManagement
     //デュランダルの設定***************************************************************************************
     public class Dhura : Plataberu
     {
-        public override int ID { get { return 7; } }
-        public override string Name { get { return "デュランダル"; } }
-        public override string Explanation { get { return "「聖剣」の二つ名を持つプラタベル。正義感あふれる性格。"; } }
-        public override int Tier { get { return 3; } }
-        public override Ratio GrowthRatio { get { return new Ratio(2.5f, 2.5f, 2f); } }
+        public override int ID => 7;
+        public override string Name => "デュランダル";
+        public override string Explanation => "「聖剣」の二つ名を持つプラタベル。正義感あふれる性格。";
+        public override int Tier => 3;
+        public override Ratio GrowthRatio => new Ratio(2.5f, 2.5f, 2f);
         public override Command BattleCommand { get; set; } = new Command(2, 3, 6);
-        public override int NextLevel { get { return 1000; } }
+        public override int NextLevel => 1000;
 
-        public override string SkillName { get { return "聖剣デュランダル"; } }
+        public override string SkillName => "聖剣デュランダル";
         public override void Skill(Plataberu enemy)
         {
             Status st = enemy.BattleStatus;
@@ -151,15 +151,15 @@ namespace GameCharacterManagement
     //エリザベートの設定***************************************************************************************
     public class Eri : Plataberu
     {
-        public override int ID { get { return 8; } }
-        public override string Name { get { return "エリザベート"; } }
-        public override string Explanation { get { return "赤いプラスチックが好きなプラタベル。太陽が苦手。インドア派。"; } }
-        public override int Tier { get { return 3; } }
-        public override Ratio GrowthRatio { get { return new Ratio(2.5f, 1.0f, 3f); } }
+        public override int ID => 8;
+        public override string Name => "エリザベート";
+        public override string Explanation => "赤いプラスチックが好きなプラタベル。太陽が苦手。インドア派。";
+        public override int Tier => 3;
+        public override Ratio GrowthRatio => new Ratio(2.5f, 1.0f, 3f);
         public override Command BattleCommand { get; set; } = new Command(2, 2, 4);
-        public override int NextLevel { get { return 1000; } }
+        public override int NextLevel => 1000;
 
-        public override string SkillName { get { return "魔剣ダーインスレイヴ"; } }
+        public override string SkillName => "魔剣ダーインスレイヴ";
         public override void Skill(Plataberu enemy)
         {
 
@@ -177,15 +177,15 @@ namespace GameCharacterManagement
     //オーディンの設定***************************************************************************************
     public class Odin : Plataberu
     {
-        public override int ID { get { return 9; } }
-        public override string Name { get { return "オーディン"; } }
-        public override string Explanation { get { return "馬に乗り、大地を駆け、槍で敵を刺し貫く。"; } }
-        public override int Tier { get { return 3; } }
+        public override int ID => 9;
+        public override string Name => "オーディン";
+        public override string Explanation => "馬に乗り、大地を駆け、槍で敵を刺し貫く。";
+        public override int Tier => 3;
         public override Ratio GrowthRatio { get { return new Ratio(3.0f, 2.5f, 2f); } }
         public override Command BattleCommand { get; set; } = new Command(2, 3, 4);
-        public override int NextLevel { get { return 1000; } }
+        public override int NextLevel => 1000;
 
-        public override string SkillName { get { return "神槍グングニル"; } }
+        public override string SkillName => "神槍グングニル";
         public override void Skill(Plataberu enemy)
         {
             Status st = enemy.BattleStatus;
@@ -243,6 +243,8 @@ namespace GameCharacterManagement
 
         //戦闘時の攻撃
         public virtual Command BattleCommand { get; set; } = new Command(1, 1, 1);
+        //与えたダメージ
+        public List<float>[] Damages { get; private set; } = new List<float>[2];
 
         //スキル
         public virtual void Skill(Plataberu enemy) { }

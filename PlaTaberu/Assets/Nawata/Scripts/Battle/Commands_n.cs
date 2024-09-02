@@ -9,22 +9,28 @@ public class Commands_n : MonoBehaviour
     [SerializeField]
     private GameObject[] commands;
     [SerializeField]
+    private bool[] selectedCommands = new bool[5];
+    [SerializeField]
     private GameObject decide;
     [SerializeField]
     private Sprite[] icons;
     [SerializeField]
     private Text cost;
 
+    private BattleDirector_n battleDirector;
     private Plataberu myChar = CharacterData._Plataberu;
     private Plataberu enemy = ServerCommunication._EnemyCharacter;
     private int[] costs = new int[3];
     private bool once = true;
+    private bool resetedComs = false;
 
     public int[] PopComs = new int[5];
+    //コマンドを選択するパートならture
     public bool choicing = true;
 
     private void Start()
     {
+        battleDirector = FindObjectOfType<BattleDirector_n>();
         costs = new int[3]
         {
             myChar.BattleCommand.AttackCost,
@@ -32,11 +38,32 @@ public class Commands_n : MonoBehaviour
             myChar.BattleCommand.SkillCost
         };
         choicing = true;
-        MyTime();
+        for(int i = 0; i < selectedCommands.Length; i++)
+            selectedCommands[i] = true;
+//        MyTime();
     }
 
     private void Update()
     {
+        //メニューが開いている間は操作不可
+        int comsIndex = 0;
+        foreach (var com in commands)
+        {
+            if (battleDirector.OpeningMenu && com.GetComponent<Button>().interactable)
+            {
+                selectedCommands[comsIndex] = com.GetComponent<Button>().interactable;
+                com.GetComponent<Button>().interactable = false;
+                resetedComs = true;
+            }
+            if (!battleDirector.OpeningMenu && resetedComs)
+            {
+                com.GetComponent<Button>().interactable = selectedCommands[comsIndex];
+                resetedComs = false;
+            }
+            comsIndex++;
+        }
+
+        //コストを表示
         cost.text = $"{myChar.BattleCommand.Cost}";
 
         if (choicing)
@@ -56,10 +83,11 @@ public class Commands_n : MonoBehaviour
         }
         else
         {
-            choicing = true;
+            //choicing = true;
         }
     }
 
+    //コマンドのシャッフルとリザルト
     private void MyTime()
     {
         decide.SetActive(true);
@@ -73,6 +101,7 @@ public class Commands_n : MonoBehaviour
         }
     }
 
+    //コマンドが選択された場合の処理
     public void select(int num)
     {
         commands[num].GetComponent<Button>().interactable = false;
@@ -80,6 +109,7 @@ public class Commands_n : MonoBehaviour
         myChar.BattleCommand.Cost -= costs[PopComs[num]];
     }
 
+    //コマンド選択を確定する
     public void Decide()
     {
         foreach(var coms in commands)

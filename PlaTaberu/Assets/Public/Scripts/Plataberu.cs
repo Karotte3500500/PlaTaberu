@@ -11,12 +11,16 @@ namespace GameCharacterManagement
         public override int ID => 1;
         public override string Name => "ベル";
         public override string Explanation => "プラタベルの子供、プラスチックを食べて育つ ";
-        public override int Tier => 1; 
+        public override int Tier => 1;
         public override Ratio GrowthRatio => new Ratio(1.0f, 1.0f, 1.0f);
         public override Command BattleCommand { get; set; } = new Command(4, 4, 0);
         public override int NextLevel => 15;
 
+        public override Item[] ItemSlot { get; set; } = new Item[3];
+
         public override string SkillName => "なにもしない";
+        public override string SkillExplanation => "なにもしない";
+
         public override void Skill(Plataberu enemy)
         {
             base.Skill(enemy);
@@ -34,7 +38,11 @@ namespace GameCharacterManagement
         public override Command BattleCommand { get; set; } = new Command(3, 4, 2);
         public override int NextLevel => 30;
 
+        public override Item[] ItemSlot { get; set; } = new Item[3];
+
         public override string SkillName => "ほえる";
+        public override string SkillExplanation => "相手の防御力を下げる";
+
         public override void Skill(Plataberu enemy)
         {
             Status cof = enemy.BattleCoefficient;
@@ -54,7 +62,11 @@ namespace GameCharacterManagement
         public override Command BattleCommand { get; set; } = new Command(2, 3, 10);
         public override int NextLevel => 1000;
 
+        public override Item[] ItemSlot { get; set; } = new Item[1];
+
         public override string SkillName => "カタストロフ";
+        public override string SkillExplanation => "防御貫通ダメージ";
+
         public override void Skill(Plataberu enemy)
         {
             Status st = enemy.BattleStatus;
@@ -74,8 +86,12 @@ namespace GameCharacterManagement
         public override Command BattleCommand { get; set; } = new Command(2, 3, 3);
         public override int NextLevel => 1000;
 
+        public override Item[] ItemSlot { get; set; } = new Item[3];
+
         public override int BaseCritical => 20;
         public override string SkillName => "真経津鏡";
+        public override string SkillExplanation => "次の攻撃が必ずクリティカルになり、敵の防御力を1ターン大ダウン";
+
         public override void Skill(Plataberu enemy)
         {
             this.BattleCritical = 100;
@@ -96,7 +112,11 @@ namespace GameCharacterManagement
         public override Command BattleCommand { get; set; } = new Command(3, 4, 5);
         public override int NextLevel => 1000;
 
+        public override Item[] ItemSlot { get; set; } = new Item[2];
+
         public override string SkillName => "ダイヤモンドリリー";
+        public override string SkillExplanation => "敵の次の攻撃を反射";
+
         public override void Skill(Plataberu enemy)
         {
             //ほりゅう
@@ -115,7 +135,11 @@ namespace GameCharacterManagement
         public override Command BattleCommand { get; set; } = new Command(4, 3, 5);
         public override int NextLevel => 30;
 
+        public override Item[] ItemSlot { get; set; } = new Item[3];
+
         public override string SkillName => "休む";
+        public override string SkillExplanation => "HPが基礎HPの一割回復";
+
         public override void Skill(Plataberu enemy)
         {
             Status mySt = this.BattleStatus;
@@ -135,7 +159,11 @@ namespace GameCharacterManagement
         public override Command BattleCommand { get; set; } = new Command(2, 3, 6);
         public override int NextLevel => 1000;
 
-        public override string SkillName => "聖剣デュランダル";
+        public override Item[] ItemSlot { get; set; } = new Item[2];
+
+        public override string SkillName => "ローラン・オルランド";
+        public override string SkillExplanation => "敵に攻撃し、防御力を上昇";
+
         public override void Skill(Plataberu enemy)
         {
             Status st = enemy.BattleStatus;
@@ -159,7 +187,11 @@ namespace GameCharacterManagement
         public override Command BattleCommand { get; set; } = new Command(2, 2, 4);
         public override int NextLevel => 1000;
 
-        public override string SkillName => "魔剣ダーインスレイヴ";
+        public override Item[] ItemSlot { get; set; } = new Item[2];
+
+        public override string SkillName => "ヴラム・カーミラ";
+        public override string SkillExplanation => "敵にダメージを与え、ダメージに比例して自身（自信）を回復する";
+
         public override void Skill(Plataberu enemy)
         {
 
@@ -185,7 +217,11 @@ namespace GameCharacterManagement
         public override Command BattleCommand { get; set; } = new Command(2, 3, 4);
         public override int NextLevel => 1000;
 
-        public override string SkillName => "神槍グングニル";
+        public override Item[] ItemSlot { get; set; } = new Item[1];
+
+        public override string SkillName => "ヴォータン・グングニル";
+        public override string SkillExplanation => "攻撃し、敵の防御をダウン";
+
         public override void Skill(Plataberu enemy)
         {
             Status st = enemy.BattleStatus;
@@ -214,6 +250,9 @@ namespace GameCharacterManagement
         //プラタベルの成長タイプ - 変更禁止
         public string GrowthType { get { return GrowthRatio.Type; } }
 
+        /*今まで得たプラスチックの種類(ATK：赤,DEF：青,HP：緑)*/
+        public Status Plastics { get; private set; } = Status.Zero;
+
         //現在の成長値 - 変更禁止
         public float Grp { get; private set; }
         //次のレベルまでに必要な成長値 - 変更禁止
@@ -226,6 +265,9 @@ namespace GameCharacterManagement
         public int Level { get; private set; }
         //成長に必要なレベル
         public virtual int NextLevel { get { return 15; } }
+
+        //アイテムスロット
+        public virtual Item[] ItemSlot { get; set; } = new Item[0];
 
         //基本ステータス - 変更禁止
         public Status BaseStatus { get; private set; }
@@ -243,13 +285,17 @@ namespace GameCharacterManagement
 
         //戦闘時の攻撃
         public virtual Command BattleCommand { get; set; } = new Command(1, 1, 1);
-        //与えたダメージ
-        public List<float>[] Damages { get; private set; } = new List<float>[2];
+        //被ダメージ
+        public List<float> DamagesSuffered { get; set; } = new List<float>();
+        //受ダメージ
+        public List<float> DamagesInflicted { get; set; } = new List<float>();
 
         //スキル
         public virtual void Skill(Plataberu enemy) { }
         //スキル名
         public virtual string SkillName { get { return "-"; } }
+        //スキルの説明
+        public virtual string SkillExplanation { get { return "-"; } }
 
         //戦闘時のステータス初期化
         public void BattleStatusReset()
@@ -295,10 +341,23 @@ namespace GameCharacterManagement
             return this.Level - this.OldLevel;
         }
 
+        public void GetPlastic(float red, float green, float blue)
+        {
+            this.AddGrp(red + blue + green);
+
+            Status pla = Plastics;
+            pla.ATK += red;
+            pla.DEF += blue;
+            pla.HP += green;
+
+            Plastics = pla;
+        }
+
         //戦闘時の動き
         public int BattleMove(Plataberu own, Plataberu enemy, int turn)
         {
             int coms = this.BattleCommand.SelectedCommand[turn];
+            float hp = enemy.BattleStatus.HP;
 
             if (coms == 0)
             {
@@ -308,7 +367,7 @@ namespace GameCharacterManagement
             }
             else if (coms == 1)
             {
-                enemy.BattleCommand.isDfensing = true;
+                own.BattleCommand.isDfensing = true;
             }
             else if (coms == 2)
             {
@@ -318,6 +377,11 @@ namespace GameCharacterManagement
             {
                 return -1;
             }
+
+            float dam = hp - enemy.BattleStatus.HP;
+
+            own.DamagesInflicted.Add(dam);
+            enemy.DamagesSuffered.Add(dam);
 
             return coms;
         }
@@ -331,7 +395,7 @@ namespace GameCharacterManagement
             return
                 ((this.BattleStatus.ATK * this.BattleCoefficient.ATK) /
                 ((defenser.BattleStatus.DEF * defenser.BattleCoefficient.DEF) / 30 + 1)) *
-                83 * (randomNum < critical ? 1.5f : 1) * (defenser.BattleCommand.isDfensing ? 0.5f : 1.0f) * 2;
+                83 * (randomNum < SetCritical(critical) ? 1.5f : 1) * (defenser.BattleCommand.isDfensing ? 0.5f : 1.0f) * 2;
         }
         //貫通攻撃
         public float AttackThrough(Plataberu defenser, int critical)
@@ -342,14 +406,31 @@ namespace GameCharacterManagement
             return
                 ((this.BattleStatus.ATK * this.BattleCoefficient.ATK) /
                 (((defenser.BattleStatus.DEF * defenser.BattleCoefficient.DEF) / 30 + 1) / 2)) *
-                83 * (randomNum < critical ? 1.5f : 1) * (defenser.BattleCommand.isDfensing ? 0.5f : 1.0f) * 2;
+                83 * (randomNum < SetCritical(critical) ? 1.5f : 1) * (defenser.BattleCommand.isDfensing ? 0.5f : 1.0f) * 2;
         }
-        
+
+        public int SetCritical(int critiacl)
+        {
+            float num = 1;
+            foreach (var item in ItemSlot)
+            {
+                if (item == null)
+                    continue;
+                if (item.ID == 2)
+                    num += 0.5f;
+            }
+            int crit = (int)((float)critiacl * num);
+
+            return crit >= 100 ? 100 : crit;
+        }
+
         public void WaveReset()
         {
             this.BattleCommand.Reset();
             this.TemporaryCoefficient = Status.One;
             this.BattleCritical = this.BaseCritical;
+            this.DamagesInflicted.Clear();
+            this.DamagesSuffered.Clear();
         }
 
         //複製を生成
@@ -367,17 +448,38 @@ namespace GameCharacterManagement
         //情報を文字列にする
         public string DebugString()
         {
+
+            string damages = "与ダメージ：";
+            foreach (var dama in this.DamagesInflicted)
+                damages += $" {dama:0.00} ,";
+            damages += "\n被ダメージ：";
+            foreach (var dama in this.DamagesSuffered)
+                damages += $" {dama:0.00} ,";
+
+            string items = "アイテム：";
+            foreach (var item in this.ItemSlot)
+            {
+                if (item == null)
+                {
+                    items += "[Empty]";
+                    continue;
+                }
+                items += $"[{item.Name}]";
+            }
+
             return
                 $"名前：{this.Name}　　レベル：{this.Level}lv    Tier：{this.Tier}\n" +
                 $"成長タイプ：{this.GrowthType}　　成長割合{this.GrowthRatio.DebugString()}\n" +
                 $"{this.Explanation}\n" +
                 $"総成長値：{this.TotalGrp:###0.00}grp　　成長値：{this.Grp:##0.00}grp　　" +
                 $"目標成長値：{this.TargetGrp:##0.00}grp\n" +
+                $"回収したプラスチック：{this.Plastics.DebugString()}\n" +
                 $"基本ステータス：{this.BaseStatus.DebugString()}\n" +
                 $"戦闘ステータス：{this.BattleStatus.DebugString()}\n" +
                 $"ステータス係数：{this.BattleCoefficient.DebugString()}\n" +
                 $"\n[戦闘コマンド]\n{this.BattleCommand.DebugString()}\n" +
-                $"スキル名：「{this.SkillName}」";
+                items + "\n" +
+                $"スキル名：「{this.SkillName}」\n" + damages;
         }
     }
 
@@ -393,6 +495,14 @@ namespace GameCharacterManagement
             this.ATK = atk;
             this.DEF = def;
             this.HP = hp;
+        }
+
+        public Status Add(Status status)
+        {
+            this.ATK += status.ATK;
+            this.DEF += status.DEF;
+            this.HP += status.HP;
+            return this;
         }
 
         public string DebugString()
@@ -464,9 +574,9 @@ namespace GameCharacterManagement
         public int MaxCost { get { return 5; } }
         //現在の持ちコスト
         public int Cost { get; set; } = 0;
-        
+
         //毎ターン、プレイヤーが選択したカードを格納するリスト
-        public List<int> SelectedCommand { get; set; } = new List<int> ();
+        public List<int> SelectedCommand { get; set; } = new List<int>();
 
         public Command(int attackCost, int defenseCost, int skillCost)
         {
@@ -532,6 +642,29 @@ namespace GameCharacterManagement
                 $"Maxコスト{this.MaxCost}  現在のコスト：{this.Cost}";
         }
 
+    }
+
+
+    /*アイテム*/
+    public class Item
+    {
+        public virtual string Name { get { return "アイテム"; } }
+        public virtual int ID { get { return 0; } }
+        public virtual string Explanation { get { return "いろいろすごいやつ"; } }
+    }
+
+    public class Shield : Item
+    {
+        public override string Name => "シールド";
+        public override int ID => 1;
+        public override string Explanation => "攻撃を防ぐ盾";
+    }
+
+    public class Glasses : Item
+    {
+        public override string Name => "眼鏡";
+        public override int ID => 2;
+        public override string Explanation => "クリティカル率を上げる眼鏡";
     }
 
     namespace Battle

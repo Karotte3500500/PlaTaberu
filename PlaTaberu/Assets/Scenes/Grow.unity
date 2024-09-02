@@ -1093,6 +1093,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1004810816}
   m_CullTransparentMesh: 1
+--- !u!1 &1028535365 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 709540045362950431, guid: 0c913fb1a9e841b498001f21f4bb9a77, type: 3}
+  m_PrefabInstance: {fileID: 1359003703}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1084254778
 GameObject:
   m_ObjectHideFlags: 0
@@ -1155,6 +1160,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   feedBotton: {fileID: 2124106008}
   lvUpUI: {fileID: 6289243784370298053, guid: fcfa652f913ac3246b40a799b1a2d224, type: 3}
+  charImg: {fileID: 1028535365}
   cost: 50
 --- !u!1 &1112889046
 GameObject:
@@ -1375,6 +1381,14 @@ PrefabInstance:
     - target: {fileID: 709540045362950431, guid: 0c913fb1a9e841b498001f21f4bb9a77, type: 3}
       propertyPath: m_Name
       value: character
+      objectReference: {fileID: 0}
+    - target: {fileID: 1421983829791164749, guid: 0c913fb1a9e841b498001f21f4bb9a77, type: 3}
+      propertyPath: Question
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1421983829791164749, guid: 0c913fb1a9e841b498001f21f4bb9a77, type: 3}
+      propertyPath: Exclamation
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9133535517275457755, guid: 0c913fb1a9e841b498001f21f4bb9a77, type: 3}
       propertyPath: m_LocalScale.x

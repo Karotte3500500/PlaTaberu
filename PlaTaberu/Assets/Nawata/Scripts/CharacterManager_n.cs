@@ -24,7 +24,7 @@ public class CharacterManager_n : MonoBehaviour
     public bool tere = false;
     public bool douyo = false;
 
-    void Start()
+    private void Start()
     {
         charObj = Instantiate(plataberus[character.ID], this.transform);
         this.transform.localScale = new Vector3(1f, 1f, 1f);

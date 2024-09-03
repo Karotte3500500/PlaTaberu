@@ -119,7 +119,7 @@ public class BattleDirector_n : MonoBehaviour
 
     private void setHpbar(int num)
     {
-        hpBar[num].GetComponent<HPbar_n>().MaxValue = plataberus[num].BaseStatus.HP;
+        hpBar[num].GetComponent<HPbar_n>().MaxValue = plataberus[num].ActualStatus.HP;
         hpBar[num].GetComponent<HPbar_n>().NowValue = plataberus[num].BattleStatus.HP;
     }
 

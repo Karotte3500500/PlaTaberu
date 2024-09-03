@@ -13,6 +13,9 @@ public class Feed_n : MonoBehaviour
     [SerializeField]
     private Button feedBotton;
     [SerializeField]
+    private Button[] feedBottons;
+
+    [SerializeField]
     private GameObject lvUpUI;
     [SerializeField]
     private GameObject charImg;
@@ -32,11 +35,20 @@ public class Feed_n : MonoBehaviour
         {
             if (CharacterData._PlasticNum < cost)
             {
+                Debug.Log(myChara.DebugString());
                 feedBotton.interactable = false;
+                foreach (var feed in feedBottons)
+                {
+                    feed.interactable = false;
+                }
             }
             else
             {
                 feedBotton.interactable = true;
+                foreach (var feed in feedBottons)
+                {
+                    feed.interactable = true;
+                }
             }
         }
         else if(count < 80)
@@ -45,6 +57,10 @@ public class Feed_n : MonoBehaviour
             {
                 lvUpUIobj = controlUI.SetUI(lvUpUI);
                 feedBotton.interactable = false;
+                foreach (var feed in feedBottons)
+                {
+                    feed.interactable = false;
+                }
                 Debug.Log(myChara.DebugString());
             }
             count++;
@@ -63,6 +79,32 @@ public class Feed_n : MonoBehaviour
         charImg.GetComponent<CharacterManager_n>().CharacterAnimation = 3;
         CharacterData._PlasticNum -= cost;
         myChara.AddGrp(cost);
+        upLevel = myChara.LevelUp();
+    }
+
+    public void Feed(int num)
+    {
+        charImg.GetComponent<CharacterManager_n>().CharacterAnimation = 3;
+        CharacterData._PlasticNum -= cost;
+
+        Status pla = Status.Zero;
+        if (num == 0)
+        {
+            CharacterData._RedPlastic -= cost;
+            pla.ATK += cost;
+        }
+        else if (num == 1)
+        {
+            CharacterData._GreenPlastic -= cost;
+            pla.HP += cost;
+        }
+        else
+        {
+            CharacterData._BluePlastic -= cost;
+            pla.DEF += cost;
+        }
+
+        myChara.GetPlastic(pla);
         upLevel = myChara.LevelUp();
     }
 }

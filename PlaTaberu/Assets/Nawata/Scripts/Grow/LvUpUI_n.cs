@@ -31,17 +31,17 @@ public class LvUpUI_n : MonoBehaviour
         if(count == speed)
         {
             status.text += "H  P:";
-            statusNum.text += $"{((int)myChar.BaseStatus.HP)}";
+            statusNum.text += $"{((int)myChar.ActualStatus.HP)}";
         }
         if(count == speed * 2)
         {
             status.text += "\nATK:";
-            statusNum.text += $"\n{((int)myChar.BaseStatus.ATK)}";
+            statusNum.text += $"\n{((int)myChar.ActualStatus.ATK)}";
         }
         if (count == speed * 3)
         {
             status.text += "\nDEF:";
-            statusNum.text += $"\n{((int)myChar.BaseStatus.DEF)}";
+            statusNum.text += $"\n{((int)myChar.ActualStatus.DEF)}";
         }
         count++;
     }

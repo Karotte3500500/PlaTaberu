@@ -270,7 +270,9 @@ namespace GameCharacterManagement
         public virtual Item[] ItemSlot { get; set; } = new Item[0];
 
         //基本ステータス - 変更禁止
-        public Status BaseStatus { get; private set; }
+        public Status BaseStatus { get; private set; } = Status.Zero;
+        //実際のステータス
+        public Status ActualStatus { get; private set; } = Status.Zero;
         //戦闘時に変化させるステータス
         public Status BattleStatus { get; set; } = Status.Zero;
         //永続的なバフ・デバフ係数
@@ -300,7 +302,7 @@ namespace GameCharacterManagement
         //戦闘時のステータス初期化
         public void BattleStatusReset()
         {
-            this.BattleStatus = this.BaseStatus;
+            this.BattleStatus = this.ActualStatus;
             this.BattleCoefficient = Status.One;
             this.BattleCritical = this.BaseCritical;
             this.BattleCommand.AllReset();
@@ -316,6 +318,24 @@ namespace GameCharacterManagement
             baseStatus.HP += ((coefficient * this.Tier) + this.Level) * (this.GrowthRatio.HP + 1) * 15;
 
             this.BaseStatus = baseStatus;
+
+            SetActualStatus();
+        }
+
+        private void SetActualStatus()
+        {
+            this.ActualStatus = this.BaseStatus;
+            Status baseSta = this.BaseStatus;
+            Status pla = this.Plastics;
+            float plaSum = pla.ATK + pla.DEF + pla.HP;
+            if (plaSum != 0)
+            {
+                baseSta.ATK *= pla.ATK / plaSum;
+                baseSta.DEF *= pla.DEF / plaSum;
+                baseSta.HP *= pla.HP / plaSum;
+            }
+
+            this.ActualStatus = this.ActualStatus.Add(baseSta);
         }
 
         //相成長値を加算
@@ -349,6 +369,15 @@ namespace GameCharacterManagement
             pla.ATK += red;
             pla.DEF += blue;
             pla.HP += green;
+
+            Plastics = pla;
+        }
+        public void GetPlastic(Status plastics)
+        {
+            this.AddGrp(plastics.ATK + plastics.DEF + plastics.HP);
+
+            Status pla = Plastics;
+            pla.Add(plastics);
 
             Plastics = pla;
         }
@@ -439,6 +468,7 @@ namespace GameCharacterManagement
             Plataberu copy = new Plataberu();
 
             copy.AddGrp(this.TotalGrp);
+            copy.Plastics = this.Plastics;
             copy.BattleStatus = this.BattleStatus;
             copy.LevelUp();
 
@@ -475,6 +505,7 @@ namespace GameCharacterManagement
                 $"目標成長値：{this.TargetGrp:##0.00}grp\n" +
                 $"回収したプラスチック：{this.Plastics.DebugString()}\n" +
                 $"基本ステータス：{this.BaseStatus.DebugString()}\n" +
+                $"実質ステータス：{this.ActualStatus.DebugString()}\n" +
                 $"戦闘ステータス：{this.BattleStatus.DebugString()}\n" +
                 $"ステータス係数：{this.BattleCoefficient.DebugString()}\n" +
                 $"\n[戦闘コマンド]\n{this.BattleCommand.DebugString()}\n" +

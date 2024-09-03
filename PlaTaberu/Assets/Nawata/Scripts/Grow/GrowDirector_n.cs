@@ -8,9 +8,7 @@ public class GrowDirector_n : MonoBehaviour
     ControlUI controlUI;
 
     [SerializeField]
-    private Text plaNum;
-    [SerializeField]
-    private Text pointNum;
+    private Text[] plastics;
 
     [SerializeField]
     private Text charName;
@@ -22,7 +20,10 @@ public class GrowDirector_n : MonoBehaviour
 
     private void Update()
     {
-        plaNum.text = $"{CharacterData._PlasticNum}";
+        plastics[0].text = $"{CharacterData._RedPlastic}";
+        plastics[1].text = $"{CharacterData._GreenPlastic}";
+        plastics[2].text = $"{CharacterData._BluePlastic}";
+
         charName.text = $"{CharacterData._Plataberu.Name} lv.{CharacterData._Plataberu.Level}";
     }
 }

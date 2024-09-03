@@ -123,6 +123,17 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &353138358 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6584140012924600282, guid: e9372646a1b5bc049929a41d5a5072e1, type: 3}
+  m_PrefabInstance: {fileID: 4332479953071129734}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6e714c19aa69094e9577f5d35096ea4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -449,16 +460,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1254238527}
-        m_TargetAssemblyTypeName: StartDirector_n, Assembly-CSharp
-        m_MethodName: ToGrowScene
-        m_Mode: 1
+      - m_Target: {fileID: 353138358}
+        m_TargetAssemblyTypeName: ControlUI, Assembly-CSharp
+        m_MethodName: SwitchScene
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Home
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1051030824
@@ -938,8 +949,8 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 4332479953071129734}
   - {fileID: 519420032}
   - {fileID: 2138446708}
   - {fileID: 1726148638}
   - {fileID: 1254238528}
-  - {fileID: 4332479953071129734}

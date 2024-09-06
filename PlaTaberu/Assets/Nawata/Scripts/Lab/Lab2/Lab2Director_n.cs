@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class GlobalValue
+public class Lab2Director_n : MonoBehaviour
 {
-    public static string _PreviousScene = "Home";
+
+
 }

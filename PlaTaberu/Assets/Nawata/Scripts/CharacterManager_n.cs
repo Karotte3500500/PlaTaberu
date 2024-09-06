@@ -27,7 +27,7 @@ public class CharacterManager_n : MonoBehaviour
     private void Start()
     {
         charObj = Instantiate(plataberus[character.ID], this.transform);
-        this.transform.localScale = new Vector3(1f, 1f, 1f);
+        //this.transform.localScale = new Vector3(1f, 1f, 1f);
     }
 
     void Update()

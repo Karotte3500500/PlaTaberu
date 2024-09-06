@@ -26,4 +26,9 @@ public class GrowDirector_n : MonoBehaviour
 
         charName.text = $"{CharacterData._Plataberu.Name} lv.{CharacterData._Plataberu.Level}";
     }
+
+    public void ReturnScene()
+    {
+        controlUI.SwitchScene(GlobalValue._PreviousScene);
+    }
 }

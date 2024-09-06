@@ -681,21 +681,35 @@ namespace GameCharacterManagement
     {
         public virtual string Name { get { return "アイテム"; } }
         public virtual int ID { get { return 0; } }
-        public virtual string Explanation { get { return "いろいろすごいやつ"; } }
+        public virtual string Explanation { get { return "-"; } }
     }
 
-    public class Shield : Item
+    public class PiggyBank : Item
     {
-        public override string Name => "シールド";
+        public override string Name => "ちょきんばこ";
         public override int ID => 1;
-        public override string Explanation => "攻撃を防ぐ盾";
+        public override string Explanation => "はじめのコストが+1される";
     }
 
     public class Glasses : Item
     {
-        public override string Name => "眼鏡";
+        public override string Name => "りょうしつなめがね";
         public override int ID => 2;
-        public override string Explanation => "クリティカル率を上げる眼鏡";
+        public override string Explanation => "クリティカルがおこりやすくなる";
+    }
+
+    public class Spray : Item
+    {
+        public override string Name => "おうきゅうスプレー";
+        public override int ID => 3;
+        public override string Explanation => "ピンチのときにたいりょくをかいふくする";
+    }
+
+    public class Unison : Item
+    {
+        public override string Name => "ユニゾンマイク";
+        public override int ID => 4;
+        public override string Explanation => "すべておなじカードをえらぶと こうか がおおきくなる";
     }
 
     namespace Battle

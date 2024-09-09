@@ -5,6 +5,70 @@ using System.Collections.Generic;
 
 namespace GameCharacterManagement
 {
+    /*プラタベルの管理*/
+    public static class PlataberuManager
+    {
+        //IDからプラタベルを参照する
+        public static Plataberu GetPlataberu(int id)
+        {
+            Plataberu beru = null;
+            switch (id)
+            {
+                case 1:
+                    beru = new Belu();
+                    break;
+                case 2:
+                    beru = new Kei();
+                    break;
+                case 3:
+                    beru = new Nina();
+                    break;
+                case 4:
+                    beru = new Vaha();
+                    break;
+                case 5:
+                    beru = new Cona();
+                    break;
+                case 6:
+                    beru = new Lily();
+                    break;
+                case 7:
+                    beru = new Dhura();
+                    break;
+                case 8:
+                    beru = new Eri();
+                    break;
+                case 9:
+                    beru = new Odin();
+                    break;
+                default:
+                    beru = new Plataberu();
+                    break;
+            }
+
+            return beru;
+        }
+
+        public static Plataberu GrowUp(Plataberu beru, int id)
+        {
+            Plataberu beruGrown = GetPlataberu(id);
+            beruGrown.GetPlastic(beru.Plastics);
+            beruGrown.AddGrp(beru.TotalGrp - (beru.Plastics.ATK + beru.Plastics.DEF + beru.Plastics.HP));
+            beruGrown.LevelUp();
+            beruGrown.NickName = beru.NickName;
+
+            for (int i = 0; i < beruGrown.ItemSlot.Length; i++)
+            {
+                if (beru.ItemSlot.Length <= i) break;
+                beruGrown.ItemSlot[i] = beru.ItemSlot[i];
+            }
+
+            return beruGrown;
+        }
+
+    }
+
+
     //ベルの設定***************************************************************************************
     public class Belu : Plataberu
     {
@@ -236,6 +300,10 @@ namespace GameCharacterManagement
     //プラタベルの定義***************************************************************************************
     public class Plataberu
     {
+        //ニックネーム
+        public string NickName { get; set; } = "べる";
+
+        //ID
         public virtual int ID { get { return 0; } }
         //プラタベルの名前
         public virtual string Name { get { return "ベル"; } }
@@ -467,7 +535,6 @@ namespace GameCharacterManagement
         {
             Plataberu copy = new Plataberu();
 
-            copy.AddGrp(this.TotalGrp);
             copy.Plastics = this.Plastics;
             copy.BattleStatus = this.BattleStatus;
             copy.LevelUp();
@@ -498,6 +565,7 @@ namespace GameCharacterManagement
             }
 
             return
+                $"ニックネーム：{this.NickName}\n" +
                 $"名前：{this.Name}　　レベル：{this.Level}lv    Tier：{this.Tier}\n" +
                 $"成長タイプ：{this.GrowthType}　　成長割合{this.GrowthRatio.DebugString()}\n" +
                 $"{this.Explanation}\n" +

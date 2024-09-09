@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EliManagement : PlataberuAnimationDirector
+public class KeiManagement : PlataberuAnimationDirector
 {
     private int count = 0;
     private bool after = false;
@@ -12,7 +12,7 @@ public class EliManagement : PlataberuAnimationDirector
         if (base.anim.GetCurrentAnimatorClipInfo(0)[0].clip.name == "eat" ||
             characterManager.CharacterAnimation == 3)
         {
-            characterManager.CharacterFace = 3;
+            characterManager.CharacterFace = 4;
             characterManager.tere = true;
             after = true;
         }
@@ -26,7 +26,7 @@ public class EliManagement : PlataberuAnimationDirector
         else
         {
             count++;
-            if (count > 300)
+            if (count > 150)
             {
                 characterManager.CharacterFace = Random.Range(1, 5);
                 count = 0;

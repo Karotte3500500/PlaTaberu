@@ -12,5 +12,5 @@ public static class CharacterData
     public static float _GreenPlastic = 1000;
     public static float _BluePlastic = 1000;
 
-    public static Plataberu _Plataberu = new Eri();
+    public static Plataberu _Plataberu = new Lily();
 }

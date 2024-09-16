@@ -42,7 +42,7 @@ public class StatusDirector_n : MonoBehaviour
     {
         controlUI = FindObjectOfType<ControlUI>();
         for (int i = 0; i < myChar.Tier; i++)
-            controlUI.SetUI(star, new Vector2(40 + (i * 60), 1970));
+            controlUI.SetUI(star, new Vector2(40 + (i * 60), 1870));
     }
 
     private void Update()

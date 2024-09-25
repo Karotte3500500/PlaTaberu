@@ -5,8 +5,8 @@ using GameCharacterManagement;
 
 public class CharacterManager_n : MonoBehaviour
 {
-
-    public virtual Plataberu character { get { return CharacterData._Plataberu; } }
+    public int ID;
+    private int characterID = -1;
 
     private GameObject charObj;
 
@@ -26,12 +26,17 @@ public class CharacterManager_n : MonoBehaviour
 
     private void Start()
     {
-        charObj = Instantiate(plataberus[character.ID], this.transform);
-        //this.transform.localScale = new Vector3(1f, 1f, 1f);
+        ID = CharacterData._Plataberu.ID;
     }
-
-    void Update()
+    private void Update()
     {
-        
+        if(characterID != ID)
+        {
+            if (charObj != null)
+                Destroy(charObj);
+
+            charObj = Instantiate(plataberus[ID], this.transform);
+            characterID = ID;
+        }
     }
 }

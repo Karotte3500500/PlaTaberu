@@ -636,8 +636,8 @@ namespace GameCharacterManagement
             get
             {
                 return
-                    Math.Abs(this.ATK - this.DEF) < 2 ? (this.HP < 5 ? "General" : "Supporter") :
-                    (this.ATK > this.DEF ? "Attacker" : "Defenser");
+                    Math.Abs(this.ATK - this.DEF) < 2 ? (this.HP < 5 ? "ジェネラル" : "テクニカル") :
+                    (this.ATK > this.DEF ? "アタッカー" : "ディフェンサー");
             }
         }
 

@@ -12,6 +12,10 @@ public class test_rec : MonoBehaviour
 
     public Button ReturnButton;
 
+    /*デバッグ用   *実際は削除  */
+    [SerializeField]
+    private Text errorMess;
+
     // サーバー設定
     private string host = "192.168.11.3";  // サーバーのIPアドレス
     private int port = 5001;                         // サーバーと同じポート番号
@@ -53,6 +57,8 @@ public class test_rec : MonoBehaviour
             }
 
             Debug.Log("ファイル受信が完了しました: " + filePath);
+            //デバッグ後削除
+            errorMess.text = "ファイル受信が完了しました: " + filePath;
 
             // ソケットを閉じる
             stream.Close();
@@ -61,6 +67,8 @@ public class test_rec : MonoBehaviour
         catch (Exception e)
         {
             Debug.LogError("エラーが発生しました: " + e.Message);
+            //デバッグ後削除
+            errorMess.text = "エラーが発生しました: " + e.Message;
         }
     }
 }

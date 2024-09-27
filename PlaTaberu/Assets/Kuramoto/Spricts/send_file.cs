@@ -10,6 +10,10 @@ public class send_file : MonoBehaviour
 
     public Button ReturnButton;
 
+    /*デバッグ用   *実際は削除  */
+    [SerializeField]
+    private Text errorMess;
+
     private string filePath; // アップロードしたいファイルのパスを指定
     private string url = "http://192.168.11.3/upload.php"; // サーバーのURLを指定
 

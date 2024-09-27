@@ -43,8 +43,15 @@ public class test_rec : MonoBehaviour
             // ファイルを保存するパス
             string filePath = Path.Combine(Application.persistentDataPath, "received_file.xml");
 
-            // 受信したデータをファイルに書き込み
-            using (FileStream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+            if (!File.Exists(filePath))
+            {
+                string xmlContent = "<root>\n\t<example>Sample Data</example>\n</root>";
+                File.WriteAllText(filePath, xmlContent);
+                Debug.Log("File created: " + filePath);
+            }
+
+                // 受信したデータをファイルに書き込み
+                using (FileStream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
             {
                 byte[] buffer = new byte[1024];
                 int bytesRead;

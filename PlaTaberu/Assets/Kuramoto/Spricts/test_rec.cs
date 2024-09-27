@@ -22,7 +22,16 @@ public class test_rec : MonoBehaviour
 
     private void Start()
     {
+        controlUI = FindObjectOfType<ControlUI>();
+
+        ReturnButton.onClick.AddListener(OnClick);
     }
+
+    public void OnClick()
+    {
+        ReceiveFile();
+    }
+
     public void ReceiveFile()
     {
         try

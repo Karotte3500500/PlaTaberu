@@ -45,9 +45,13 @@ public class test_rec : MonoBehaviour
 
             if (!File.Exists(filePath))
             {
+                using (FileStream fs = File.Create(filePath)) ;
+
+                /*
                 string xmlContent = "<root>\n\t<example>Sample Data</example>\n</root>";
                 File.WriteAllText(filePath, xmlContent);
                 Debug.Log("File created: " + filePath);
+                */
             }
 
                 // 受信したデータをファイルに書き込み

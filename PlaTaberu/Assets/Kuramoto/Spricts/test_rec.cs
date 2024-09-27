@@ -32,7 +32,7 @@ public class test_rec : MonoBehaviour
         ReceiveFile();
     }
 
-    private void ReceiveFile()
+    public void ReceiveFile()
     {
         try
         {

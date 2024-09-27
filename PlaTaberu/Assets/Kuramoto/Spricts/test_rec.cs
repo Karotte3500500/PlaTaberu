@@ -41,7 +41,7 @@ public class test_rec : MonoBehaviour
             NetworkStream stream = client.GetStream();
 
             // ファイルを保存するパス
-            string filePath = Path.Combine(Application.persistentDataPath, "received_file.xml");
+            string filePath = Application.persistentDataPath;// Path.Combine(Application.persistentDataPath, "received_file.xml");
 
             // 受信したデータをファイルに書き込み
             using (FileStream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))

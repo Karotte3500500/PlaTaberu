@@ -85,7 +85,7 @@ public class send_file : MonoBehaviour
 
             if (!File.Exists(filePath))
             {
-                using (FileStream fs = File.Create(filePath)) ;
+                using (FileStream fs = File.Create(filePath));
 
                 /*
                 string xmlContent = "<root>\n\t<example>Sample Data</example>\n</root>";

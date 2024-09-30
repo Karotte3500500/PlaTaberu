@@ -13,9 +13,9 @@ public class BookCharacter_n : MonoBehaviour
 
     }
 
-    // Update is called once per frame
     void Update()
     {
+        //キャラクターIDが変化した場合、キャラクターを変更する
         if (character.GetComponent<CharacterManager_n>().ID != GlobalSwitch._CharacterID)
             character.GetComponent<CharacterManager_n>().ID = GlobalSwitch._CharacterID;
     }

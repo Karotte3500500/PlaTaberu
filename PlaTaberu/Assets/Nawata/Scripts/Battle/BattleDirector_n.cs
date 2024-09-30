@@ -1,11 +1,20 @@
 using GameCharacterManagement;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class BattleDirector_n : MonoBehaviour
 {
+    [SerializeField]
+    private GameObject friendImg;
+    [SerializeField]
+    private GameObject enemyImg;
+
+    [SerializeField]
+    private CharacterManager_n[] characterImg = new CharacterManager_n[2];
+
     /*プレイヤーが操作するプラタベル*/
     [SerializeField]
     private GameObject character;
@@ -17,11 +26,11 @@ public class BattleDirector_n : MonoBehaviour
     [SerializeField]
     private Button decide;
 
-    /**/
+    /*メニューが表示されているか*/
     public bool OpeningMenu = false;
 
     private Commands_n commands;
-    private Plataberu[] plataberus = new Plataberu[2] { CharacterData._Plataberu, ServerCommunication._EnemyCharacter };
+    private Plataberu[] plataberus = new Plataberu[2] { CharacterData._Plataberu, GlobalValue.enemy };
     private bool BattleRunned = false;
 
     private void Start()
@@ -37,6 +46,20 @@ public class BattleDirector_n : MonoBehaviour
         }
         menu.SetActive(false);
         commands = FindObjectOfType<Commands_n>();
+
+        //CharacterManagerのコンポーネントを取得
+        characterImg = new CharacterManager_n[2]
+        {
+            friendImg.GetComponent<CharacterManager_n>(),
+            enemyImg.GetComponent<CharacterManager_n>(),
+        };
+
+        //味方のアバターを設定
+        characterImg[0].Layer = 2;
+        characterImg[0].ID = plataberus[0].ID;
+        //敵のアバターを設定
+        characterImg[1].Layer = 1;
+        characterImg[1].ID = plataberus[1].ID;
     }
 
     private void Update()
@@ -70,8 +93,10 @@ public class BattleDirector_n : MonoBehaviour
         if (turn > setTurn(plataberus[num]) - 1) return;
         plataberus[num].BattleMove(plataberus[num], plataberus[num == 0 ? 1 : 0], turn);
     }
+    //戦闘処理をする
     private void RunBattle()
     {
+        //デバッグ用
         int len = setTurn(plataberus[0]) > setTurn(plataberus[1]) ? setTurn(plataberus[0]) : setTurn(plataberus[1]);
         Debug.Log(len);
         for (int i = 0; i < len; i++)
@@ -81,13 +106,32 @@ public class BattleDirector_n : MonoBehaviour
         }
     }
 
+    //アニメーションを実行する
+    private void RunBattleAnimation(int beru1, int beru2, int trun)
+    {
+        characterImg[beru1].CharacterAnimation
+            = plataberus[beru1].BattleCommand.SelectedCommand[trun] + 4;
+
+        //攻撃を受ける
+        if (plataberus[beru1].BattleCommand.SelectedCommand[trun] == 0 && plataberus[beru2].BattleCommand.SelectedCommand[trun] != 1) ;
+            characterImg[beru2].CharacterAnimation = 7;
+    }
+
     private int count = 0;
     private void MoveBattle()
     {
         if (BattleRunned)
         {
+            //ばちょるシーンじゃ
             count++;
-            if(count > 100)
+
+            if (count % 100 == 0)
+            {
+                int num = (count / 100);
+                RunBattleAnimation(num % 2, 1 - num % 2, (count / 100));
+            }
+
+            if (count > 100 * (setTurn(plataberus[0]) + setTurn(plataberus[1])))
             {
                 //コマンド選択へ遷移
                 commands.choicing = true;
@@ -98,16 +142,19 @@ public class BattleDirector_n : MonoBehaviour
         }
         else
         {
+            /*デバッグ用*/
             EnemyCommandSet();
-
             Debug.Log(plataberus[0].DebugString());
             Debug.Log(plataberus[1].DebugString());
+
+
             RunBattle();
-            BattleRunned = true;
             count = 0;
+            BattleRunned = true;
         }
     }
 
+    //デバッグ用
     private void EnemyCommandSet()
     {
         int num = Random.Range(0, 4);

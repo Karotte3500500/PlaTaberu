@@ -6,5 +6,5 @@ using GameCharacterManagement;
 public static class GlobalValue
 {
     public static string _PreviousScene = "Home";
-    public static Plataberu enemy;
+    public static Plataberu enemy = new Eri();
 }

@@ -19,6 +19,7 @@ public class HomeDirector_n : MonoBehaviour
 
     private void Update()
     {
+        /*î•ñ‚ğ•\¦*/
         charName.text = myChar.Name;
         charLevel.text = $"{myChar.Level}";
         charType.text = myChar.GrowthType;

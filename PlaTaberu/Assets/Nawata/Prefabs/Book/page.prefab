@@ -69,7 +69,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 3b6c1ac06345a554e8554653bcb4e240, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9d954bb4202e3bc41967e954d5ec8349, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -170,7 +170,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 420, y: 420}
+  m_SizeDelta: {x: 712.7463, y: 420}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2764869546930687872
 CanvasRenderer:
@@ -193,14 +193,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.60312134, g: 0.9245283, b: 0.46575293, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 93dcbc42c3d2f2e44bc56a2d2aaa7d32, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 85aa7e3c4b199cb489be7e433bddc559, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -455,7 +455,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   icon: {fileID: 9123010390760047474}
   frame: {fileID: 2786326801206749087}
+  back: {fileID: 4974221826528394394}
   characterName: {fileID: 6467407163436662376}
+  backs:
+  - {fileID: 21300000, guid: 9d954bb4202e3bc41967e954d5ec8349, type: 3}
+  - {fileID: 21300000, guid: 60cd3a2f67dab8946a79654da4596841, type: 3}
+  - {fileID: 21300000, guid: fe08195a0056ce541b48563e73e45240, type: 3}
   iconImg:
   - {fileID: 21300000, guid: 14736914f87be2247b2ca7091d2915f2, type: 3}
   - {fileID: 21300000, guid: 14736914f87be2247b2ca7091d2915f2, type: 3}
@@ -467,4 +472,6 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 21300000, guid: e45b52d6fd107ba44b500ef3b182789e, type: 3}
   - {fileID: 0}
+  - {fileID: 21300000, guid: 51d84e3396008624395383391fa42203, type: 3}
+  - {fileID: 21300000, guid: faee019923e76ef47a1f32ea207d08ff, type: 3}
   CharacterID: -1

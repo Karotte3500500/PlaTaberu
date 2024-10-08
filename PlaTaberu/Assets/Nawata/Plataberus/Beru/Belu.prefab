@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Belu
       objectReference: {fileID: 0}
+    - target: {fileID: -8250169266279454816, guid: f6a08c17843fdcf4789ffc8274b49404, type: 3}
+      propertyPath: m_Color.a
+      value: 0.8509804
+      objectReference: {fileID: 0}
     - target: {fileID: -7552582706839291426, guid: f6a08c17843fdcf4789ffc8274b49404, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.3
@@ -67,6 +71,14 @@ PrefabInstance:
     - target: {fileID: -7552582706839291426, guid: f6a08c17843fdcf4789ffc8274b49404, type: 3}
       propertyPath: m_ConstrainProportionsScale
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2412045484414280943, guid: f6a08c17843fdcf4789ffc8274b49404, type: 3}
+      propertyPath: m_Color.a
+      value: 0.8509804
+      objectReference: {fileID: 0}
+    - target: {fileID: 4566556927893884179, guid: f6a08c17843fdcf4789ffc8274b49404, type: 3}
+      propertyPath: m_Color.a
+      value: 0.8509804
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

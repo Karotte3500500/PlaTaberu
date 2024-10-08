@@ -41,6 +41,12 @@ namespace GameCharacterManagement
                 case 9:
                     beru = new Odin();
                     break;
+                case 10:
+                    beru = new Oyspi();
+                    break;
+                case 11:
+                    beru = new Grass();
+                    break;
                 default:
                     beru = new Plataberu();
                     break;
@@ -74,11 +80,12 @@ namespace GameCharacterManagement
     {
         public override int ID => 1;
         public override string Name => "ベル";
-        public override string Explanation => "プラタベルの子供、プラスチックを食べて育つ ";
+        public override string Explanation => "プラタベルの こども\nプラスチックをたべてそだつ";
         public override int Tier => 1;
         public override Ratio GrowthRatio => new Ratio(1.0f, 1.0f, 1.0f);
         public override Command BattleCommand { get; set; } = new Command(4, 4, 0);
         public override int NextLevel => 15;
+        public override int[] GrowDestination => new int[] { 2 };
 
         public override Item[] ItemSlot { get; set; } = new Item[3];
 
@@ -101,6 +108,7 @@ namespace GameCharacterManagement
         public override Ratio GrowthRatio => new Ratio(2.5f, 1.0f, 1.5f);
         public override Command BattleCommand { get; set; } = new Command(3, 4, 2);
         public override int NextLevel => 30;
+        public override int[] GrowDestination => new int[] { 10, 11 };
 
         public override Item[] ItemSlot { get; set; } = new Item[3];
 
@@ -297,6 +305,77 @@ namespace GameCharacterManagement
         }
     }
 
+    //オイスパイの設定***************************************************************************************
+    public class Oyspi : Plataberu
+    {
+        public override int ID => 10;
+        public override string Name => "オイスパイ";
+        public override string Explanation => "「カキパイプ」を たべて せいちょう した プラタベル。\nしっぽ の カキ で たたかう。";
+        public override int Tier => 3;
+        public override Ratio GrowthRatio { get { return new Ratio(3f, 2.5f, 2f); } }
+        public override Command BattleCommand { get; set; } = new Command(3, 2, 5);
+        public override int NextLevel => 1000;
+
+        public override Item[] ItemSlot { get; set; } = new Item[2];
+
+        public override string SkillName => "シェルストライク";
+        public override string SkillExplanation => "コストをぜんぶつかって\nいりょく を あげてこうげきする";
+
+        public override void Skill(Plataberu enemy)
+        {
+            Status st = enemy.BattleStatus;
+            int myCost = this.BattleCommand.Cost;
+
+            st.HP -= Attack(enemy, this.BattleCritical) * ((myCost + 5) / 4);
+            enemy.BattleStatus = st;
+
+            this.BattleCommand.Cost = 0;
+        }
+    }
+    //グラスの設定***************************************************************************************
+    public class Grass : Plataberu
+    {
+        public override int ID => 11;
+        public override string Name => "グラス";
+        public override string Explanation => "「じんこうしば」を たべて せいちょう した プラタベル。\nマント を さわると チクチク する。";
+        public override int Tier => 3;
+        public override Ratio GrowthRatio { get { return new Ratio(1.5f, 2f, 3f); } }
+        public override Command BattleCommand { get; set; } = new Command(1, 3, 3);
+        public override int NextLevel => 1000;
+
+        public override Item[] ItemSlot { get; set; } = new Item[3];
+
+        public override string SkillName => "ターフカーテン";
+        public override string SkillExplanation => "こうげき を うけたら\nあいても ダメージをおう";
+
+        private bool usingSkill = false;
+        private Plataberu enemyData = null;
+
+        //仮
+        public override void Skill(Plataberu enemy)
+        {
+            usingSkill = true;
+            enemyData = enemy;
+        }
+
+        public override void WaveReset()
+        {
+            base.WaveReset();
+            usingSkill = false;
+
+            if (!usingSkill || enemyData == null) return;
+
+            float d = 0;
+            foreach(var dama in this.DamagesInflicted)
+                d += dama;
+            Status st = enemyData.BattleStatus;
+            st.HP = d / 3;
+            enemyData.BattleStatus = st;
+            enemyData = null;
+        }
+    }
+
+
     //プラタベルの定義***************************************************************************************
     public class Plataberu
     {
@@ -333,6 +412,8 @@ namespace GameCharacterManagement
         public int Level { get; private set; }
         //成長に必要なレベル
         public virtual int NextLevel { get { return 15; } }
+        //成長先
+        public virtual int[] GrowDestination { get { return new int[0]; } }
 
         //アイテムスロット
         public virtual Item[] ItemSlot { get; set; } = new Item[0];
@@ -376,20 +457,21 @@ namespace GameCharacterManagement
             this.BattleCommand.AllReset();
         }
 
-        //基本ステータスに加算
+        //基本ステータスの計算
         public void GrowStatus()
         {
-            float coefficient = 1.3f;
+            float coefficient = 1.2f;
             Status baseStatus = this.BaseStatus;
             baseStatus.ATK += ((coefficient * this.Tier) + this.Level) * (this.GrowthRatio.ATK + 1);
             baseStatus.DEF += ((coefficient * this.Tier) + this.Level) * (this.GrowthRatio.DEF + 1);
-            baseStatus.HP += ((coefficient * this.Tier) + this.Level) * (this.GrowthRatio.HP + 1) * 15;
+            baseStatus.HP += ((coefficient * this.Tier) + this.Level) * (this.GrowthRatio.HP + 1) * 3;
 
             this.BaseStatus = baseStatus;
 
             SetActualStatus();
         }
 
+        //実質ステータスの計算
         private void SetActualStatus()
         {
             this.ActualStatus = this.BaseStatus;
@@ -398,9 +480,11 @@ namespace GameCharacterManagement
             float plaSum = pla.ATK + pla.DEF + pla.HP;
             if (plaSum != 0)
             {
-                baseSta.ATK *= pla.ATK / plaSum;
-                baseSta.DEF *= pla.DEF / plaSum;
-                baseSta.HP *= pla.HP / plaSum;
+                float coeff = (plaSum / 1000) + 1;
+
+                baseSta.ATK *= pla.ATK / plaSum * coeff;
+                baseSta.DEF *= pla.DEF / plaSum * coeff;
+                baseSta.HP *= pla.HP / plaSum * coeff;
             }
 
             this.ActualStatus = this.ActualStatus.Add(baseSta);
@@ -428,6 +512,29 @@ namespace GameCharacterManagement
 
             return this.Level - this.OldLevel;
         }
+
+        //成長先を指定
+        public int GrowUP()
+        {
+            //成長先がなければ自身のIDを返す
+            if (this.GrowDestination.Length == 0) return this.ID;
+
+            //与えたプラスチックで最多の色のインデックスを格納
+            int maxPla = this.Plastics.GetOneStatus();
+            //成長先の先頭を格納
+            int id = PlataberuManager.GetPlataberu(GrowDestination[0]).ID;
+
+            foreach (var gro in this.GrowDestination)
+                //最多プラスチックとタイプが対応している場合に格納（先頭から優先）
+                if (maxPla == PlataberuManager.GetPlataberu(gro).GrowthRatio.GetOneRatio())
+                {
+                    id = gro;
+                    break;
+                }
+
+            return id;
+        }
+
 
         public void GetPlastic(float red, float green, float blue)
         {
@@ -521,7 +628,7 @@ namespace GameCharacterManagement
             return crit >= 100 ? 100 : crit;
         }
 
-        public void WaveReset()
+        public virtual void WaveReset()
         {
             this.BattleCommand.Reset();
             this.TemporaryCoefficient = Status.One;
@@ -604,6 +711,35 @@ namespace GameCharacterManagement
             return this;
         }
 
+        //条件にあったステータスを配列に変換した際のインデックスを返す
+        public int GetOneStatus(Func<float, float, bool> requirements)
+        {
+            var arr = this.ToArray();
+            float max = ToArray()[0];
+
+            int index = 0;
+            for (int i = 0; i < arr.Length; i++)
+            {
+                if (requirements(max, arr[i]))
+                {
+                    max = arr[i];
+                    index = i;
+                }
+            }
+            return index;
+        }
+        //引数がない場合最大値を求める
+        public int GetOneStatus()
+        {
+            return this.GetOneStatus((max, num) => max < num);
+        }
+
+        //配列に変換
+        public float[] ToArray()
+        {
+            return new float[3] { this.ATK, this.DEF, this.HP };
+        }
+
         public string DebugString()
         {
             return $"ATK：{this.ATK:##0.00}　　DEF：{this.DEF:##0.00}　　HP：{this.HP:##0.00}";
@@ -636,9 +772,57 @@ namespace GameCharacterManagement
             get
             {
                 return
-                    Math.Abs(this.ATK - this.DEF) < 2 ? (this.HP < 5 ? "ジェネラル" : "テクニカル") :
+                    Math.Abs(this.ATK - this.DEF) < 2 ? (this.HP < 4 ? "ジェネラル" : "テクニカル") :
                     (this.ATK > this.DEF ? "アタッカー" : "ディフェンサー");
             }
+        }
+
+        //条件にあったステータスを配列に変換した際のインデックスを返す
+        public int GetOneRatio(Func<float, float, bool> requirements)
+        {
+            var arr = this.ToArray();
+            float max = ToArray()[0];
+
+            int index = 0;
+            for (int i = 0; i < arr.Length; i++)
+            {
+                if (requirements(max, arr[i]))
+                {
+                    max = arr[i];
+                    index = i;
+                }
+            }
+            return index;
+        }
+        //引数がない場合タイプに合わせたインデックスが返される
+        public int GetOneRatio()
+        {
+            int num = 0;
+            switch(this.Type)
+            {
+                case "アタッカー":
+                    num = 0;
+                    break;
+                case "ディフェンサー":
+                    num = 1;
+                    break;
+                case "テクニカル":
+                    num = 2;
+                    break;
+                case "ジェネラル":
+                    num = this.GetOneRatio((max, num) => max < num);
+                    break;
+                default:
+                    num = this.GetOneRatio((max, num) => max < num) * -1;
+                    break;
+            }
+            return num;
+        }
+
+        //配列に変換
+        public float[] ToArray()
+        {
+            return new float[3] { this.ATK, this.DEF, this.HP };
         }
 
         //複製を生成

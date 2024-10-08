@@ -17,7 +17,7 @@ public static class PlayerData
     //所持しているアイテムの個数
     public static int[] _Items = new int[5] { 0, 3, 3, 3, 3 };
     //記録されたプラタベル（IDを保存）
-    public static List<int> _RecodedPlataberu = new List<int>() { 1,2,5,6,8 };
+    public static List<int> _RecodedPlataberu = new List<int>() { 1,2,6,10,11 };
     //記録されたプラタベルの数
     private static int recodedNum = 1; 
 

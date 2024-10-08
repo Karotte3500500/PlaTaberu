@@ -15,6 +15,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Grow.unity
     guid: f8d5903f8acc0b54a8d81d985a984ce1
   - enabled: 1
+    path: Assets/Scenes/Grow2.unity
+    guid: fb0e79754531de340a94376094a5cfe2
+  - enabled: 1
     path: Assets/Scenes/Battle.unity
     guid: 09dd06107b9ddfd41a187cf1e68a229b
   - enabled: 1

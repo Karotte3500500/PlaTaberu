@@ -44,6 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a1bcaf522a6c8547931d48ecbda3336, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ID: 0
+  Layer: 1
   plataberus:
   - {fileID: 8690484708452802775, guid: 9b4a5a5dfe6c2ab4aadf51e91e71cdfb, type: 3}
   - {fileID: 6192051445568526619, guid: c7eef206e3928574d9a038a6062b7a79, type: 3}
@@ -54,9 +56,26 @@ MonoBehaviour:
   - {fileID: 8853176540967223876, guid: 45bf198bce7cd824396cf6b05a092318, type: 3}
   - {fileID: 0}
   - {fileID: 8601472847330614848, guid: 0505844c60a56fe48ae82df30735978f, type: 3}
+  - {fileID: 0}
+  - {fileID: 8862520134700719819, guid: d39e7fa817ad698428f92179f2442bd2, type: 3}
+  - {fileID: 6281890286502524292, guid: a161f38a005b935438ca952b9901a0ee, type: 3}
+  backBerus:
+  - {fileID: 8690484708452802775, guid: 9b4a5a5dfe6c2ab4aadf51e91e71cdfb, type: 3}
+  - {fileID: 8669924762381642972, guid: 5c05aed05a571494091545a8d6a1bb81, type: 3}
+  - {fileID: 7784111130102544702, guid: 7dbff8b52ed246c48b3143ce91ba931e, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 2121077581684281180, guid: ba0e0525f1afabc40aaf54f29ba59407, type: 3}
+  - {fileID: 2294466472764089857, guid: 680880b719a86b347a5f38d6ddb090a0, type: 3}
   CharacterAnimation: 0
   CharacterFace: 1
   Exclamation: 0
   Question: 0
   tere: 0
   douyo: 0
+  back: 0

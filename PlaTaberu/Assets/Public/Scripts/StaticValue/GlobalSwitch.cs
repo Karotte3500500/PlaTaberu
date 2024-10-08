@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public static class GlobalSwitch
 {
     //FPSを表示するか
-    public static bool _DisplaysFPS = true;
+    public static bool _DisplaysFPS = false;
     //切り替え先のシーン名
     public static string SwitchingScenes = "Start";
     //Bookで表示するキャラクターのID

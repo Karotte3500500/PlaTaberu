@@ -26,4 +26,9 @@ public class ControlUI : MonoBehaviour
         GlobalSwitch.SwitchingScenes = sceneName;
         this.SetUI((GameObject)Resources.Load("Nawata/Transition"));
     }
+    public void SwitchScene(string sceneName,bool memory)
+    {
+        GlobalSwitch.SwitchingScenes = sceneName;
+        this.SetUI((GameObject)Resources.Load("Nawata/Transition"));
+    }
 }

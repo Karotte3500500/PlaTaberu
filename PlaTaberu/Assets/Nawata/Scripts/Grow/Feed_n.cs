@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using GameCharacterManagement;
 
 public class Feed_n : MonoBehaviour
@@ -20,13 +21,21 @@ public class Feed_n : MonoBehaviour
     [SerializeField]
     private GameObject charImg;
 
+    [SerializeField]
+    private GameObject growPanel;
+
+    [SerializeField]
+    private Text mess;
+
     private GameObject lvUpUIobj;
     private int count = 0;
     public int cost = 10;
 
     private void Start()
     {
+        mess.text = $"{myChara.Name}ÇÃÇÊÇ§Ç∑Ç™Åc\nÇπÇ¢ÇøÇÂÇ§Ç≥ÇπÇ‹Ç∑Ç©ÅH";
         controlUI = FindObjectOfType<ControlUI>();
+        growPanel.SetActive(false);
     }
 
     private void Update()
@@ -68,6 +77,8 @@ public class Feed_n : MonoBehaviour
         else
         {
             Destroy(lvUpUIobj);
+            Grow();
+
             count = 0;
             upLevel = 0;
         }
@@ -106,5 +117,23 @@ public class Feed_n : MonoBehaviour
 
         myChara.GetPlastic(pla);
         upLevel = myChara.LevelUp();
+    }
+
+    public void Grow()
+    {
+        if (myChara.NextLevel > myChara.Level) return;
+        growPanel.SetActive(true);
+    }
+
+    public void Decide(bool decide)
+    {
+        if(decide)
+        {
+            SceneManager.LoadScene("Grow2");
+        }
+        else
+        {
+            growPanel.SetActive(false);
+        }
     }
 }

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using GameCharacterManagement;
 using UnityEngine.UI;
 using UnityEngine;
@@ -11,7 +9,12 @@ public class Page_n : MonoBehaviour
     [SerializeField]
     private GameObject frame;
     [SerializeField]
+    private Image back;
+    [SerializeField]
     private Text characterName;
+
+    [SerializeField]
+    private Sprite[] backs;
 
     [SerializeField]
     private Sprite[] iconImg;
@@ -29,16 +32,35 @@ public class Page_n : MonoBehaviour
     {
         if (CharacterID != -1)
         {
+            //IDからプラタベルを参照
             Plataberu chara = PlataberuManager.GetPlataberu(CharacterID);
 
             icon.GetComponent<Image>().sprite = iconImg[CharacterID];
             characterName.text = chara.Name;
 
             string type = chara.GrowthType;
-            Color color = type == "ジェネラル" ? new Color(1f, 1f, 1f) : (type == "テクニカル" ? new Color(0.603f, 0.924f, 0.465f) :
-                (type == "アタッカー" ? new Color(1f, 0.522f, 0.362f) : new Color(0.447f, 0.973f, 1f)));
-
+            Color color;
+            switch (type)
+            {
+                case "ジェネラル":
+                    color = new Color(0.38f, 0.38f, 0.38f, 1.00f);
+                    break;
+                case "テクニカル":
+                    color = new Color(0.35f, 0.50f, 0.00f, 1.00f);
+                    break;
+                case "アタッカー":
+                    color = new Color(0.60f, 0.30f, 0.00f, 1.00f);
+                    break;
+                case "ディフェンサー":
+                    color = new Color(0.00f, 0.49f, 0.60f, 1.00f);
+                    break;
+                default:
+                    color = new Color(0.38f, 0.38f, 0.38f, 1.00f);
+                    break;
+            }
             frame.GetComponent<Image>().color = color;
+
+            back.sprite = backs[chara.Tier - 1];
         }
     }
 

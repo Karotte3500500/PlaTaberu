@@ -17,9 +17,4 @@ public class ContensDirector_n : MonoBehaviour
             pObje.GetComponent<Page_n>().CharacterID = id;
         }
     }
-    private void Update()
-    {
-        
-    }
-
 }

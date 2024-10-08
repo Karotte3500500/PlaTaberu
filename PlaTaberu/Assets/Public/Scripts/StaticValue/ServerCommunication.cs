@@ -5,7 +5,9 @@ using GameCharacterManagement;
 
 public static class ServerCommunication
 {
-    public static Plataberu _MyCharacter = new Eri();
-    public static Plataberu _EnemyCharacter = new Vaha();
+    public static Plataberu _MyCharacter = new Belu();
+    public static Plataberu _EnemyCharacter = new Belu();
     public static int _DeviceID = -1;
+
+    /**/
 }

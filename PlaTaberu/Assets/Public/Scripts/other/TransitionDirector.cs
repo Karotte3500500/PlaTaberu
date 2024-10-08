@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -41,7 +40,7 @@ public class TransitionDirector : MonoBehaviour
         }
 
         //120ƒtƒŒ[ƒ€‚Å‘JˆÚ
-        if (count > 120)
+        if (count > 160)
             SceneManager.LoadScene(GlobalSwitch.SwitchingScenes);
         count++;
     }

@@ -37,6 +37,7 @@ public class Commands_n : MonoBehaviour
             myChar.BattleCommand.DefenseCost,
             myChar.BattleCommand.SkillCost
         };
+
         choicing = true;
         for(int i = 0; i < selectedCommands.Length; i++)
             selectedCommands[i] = true;
@@ -47,20 +48,26 @@ public class Commands_n : MonoBehaviour
     {
         //メニューが開いている間は操作不可
         int comsIndex = 0;
-        foreach (var com in commands)
+
+        if(battleDirector.OpeningMenu && !resetedComs)
         {
-            if (battleDirector.OpeningMenu && com.GetComponent<Button>().interactable)
+            foreach (var com in commands)
             {
                 selectedCommands[comsIndex] = com.GetComponent<Button>().interactable;
                 com.GetComponent<Button>().interactable = false;
                 resetedComs = true;
             }
-            if (!battleDirector.OpeningMenu && resetedComs)
+            comsIndex++;
+        }
+
+        if(!battleDirector.OpeningMenu && resetedComs)
+        {
+            foreach (var com in commands)
             {
                 com.GetComponent<Button>().interactable = selectedCommands[comsIndex];
                 resetedComs = false;
+                comsIndex++;
             }
-            comsIndex++;
         }
 
         //コストを表示

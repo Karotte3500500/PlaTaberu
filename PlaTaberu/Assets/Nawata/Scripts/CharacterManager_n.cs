@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using GameCharacterManagement;
 
 public class CharacterManager_n : MonoBehaviour
 {
@@ -15,8 +14,12 @@ public class CharacterManager_n : MonoBehaviour
 
     private GameObject charObj;
 
+    //プラタベルのオブジェクトを格納
     [SerializeField]
     private List<GameObject> plataberus;
+    //背後からのプラタベルのオブジェクトを格納
+    [SerializeField]
+    private List<GameObject> backBerus;
 
     //キャラクターの動き
     public int CharacterAnimation = 0;
@@ -29,21 +32,27 @@ public class CharacterManager_n : MonoBehaviour
     public bool tere = false;
     public bool douyo = false;
 
+    //背面かどうか
+    public bool back = false;
+    private bool backed = true;
+
     private void Start()
     {
         ID = CharacterData._Plataberu.ID;
     }
     private void Update()
     {
-        if(characterID != ID)
+        if(characterID != ID || back != backed)
         {
             if (charObj != null)
                 Destroy(charObj);
 
             //キャラクターを描写する
-            charObj = Instantiate(plataberus[ID], this.transform);
+            charObj = Instantiate(back ? backBerus[ID] : plataberus[ID], this.transform);
             characterID = ID;
             layerNum = -1;
+
+            backed = back;
         }
         if(Layer != layerNum)
         {

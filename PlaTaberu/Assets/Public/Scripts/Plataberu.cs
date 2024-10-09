@@ -72,6 +72,29 @@ namespace GameCharacterManagement
             return beruGrown;
         }
 
+        public static Item GetItem(int id)
+        {
+            Item item = null;
+            switch (id)
+            {
+                case 1:
+                    item = new PiggyBank();
+                    break;
+                case 2:
+                    item = new Glasses();
+                    break;
+                case 3:
+                    item = new Spray();
+                    break;
+                case 4:
+                    item = new Unison();
+                    break;
+                default:
+                    item = new Item();
+                    break;
+            }
+            return item;
+        }
     }
 
 
@@ -366,7 +389,7 @@ namespace GameCharacterManagement
             if (!usingSkill || enemyData == null) return;
 
             float d = 0;
-            foreach(var dama in this.DamagesInflicted)
+            foreach (var dama in this.DamagesSuffered)
                 d += dama;
             Status st = enemyData.BattleStatus;
             st.HP = d / 3;
@@ -438,7 +461,7 @@ namespace GameCharacterManagement
         public virtual Command BattleCommand { get; set; } = new Command(1, 1, 1);
         //被ダメージ
         public List<float> DamagesSuffered { get; set; } = new List<float>();
-        //受ダメージ
+        //与ダメージ
         public List<float> DamagesInflicted { get; set; } = new List<float>();
 
         //スキル
@@ -447,6 +470,11 @@ namespace GameCharacterManagement
         public virtual string SkillName { get { return "-"; } }
         //スキルの説明
         public virtual string SkillExplanation { get { return "-"; } }
+
+        //識別番号（アプリケーション側で値の異なる乱数を3つ格納すること）
+        public int[] IdentificationNumbers { get; set; } = new int[3];
+
+
 
         //戦闘時のステータス初期化
         public void BattleStatusReset()
@@ -740,6 +768,15 @@ namespace GameCharacterManagement
             return new float[3] { this.ATK, this.DEF, this.HP };
         }
 
+        //配列を変換
+        static public Status IntoStatus(float[] array)
+        {
+            if (array.Length < 3)
+                return Status.Zero;
+
+            return new Status(array[0], array[1], array[2]);
+        }
+
         public string DebugString()
         {
             return $"ATK：{this.ATK:##0.00}　　DEF：{this.DEF:##0.00}　　HP：{this.HP:##0.00}";
@@ -798,7 +835,7 @@ namespace GameCharacterManagement
         public int GetOneRatio()
         {
             int num = 0;
-            switch(this.Type)
+            switch (this.Type)
             {
                 case "アタッカー":
                     num = 0;

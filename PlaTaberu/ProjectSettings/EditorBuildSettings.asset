@@ -6,8 +6,8 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/CollectResult.unity
-    guid: 465f854431cb0774bbae0a29de22090c
+    path: Assets/Nawata/Scenes/Lab_n3.unity
+    guid: 9cc256f81f286c145a8da98d95249912
   - enabled: 1
     path: Assets/Scenes/Start.unity
     guid: 3fc8acdd13e6c734bafef6554d6fdbcd
@@ -26,6 +26,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Collect.unity
     guid: db0f8625b0f34574fbd214017a04d568
+  - enabled: 1
+    path: Assets/Scenes/CollectResult.unity
+    guid: 465f854431cb0774bbae0a29de22090c
   - enabled: 1
     path: Assets/Scenes/Story.unity
     guid: 9573a8df698dd6647884f9029a77da42

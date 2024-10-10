@@ -41,6 +41,7 @@ public class BattleDirector_n : MonoBehaviour
     private FileControl file;
     private Plataberu[] plataberus = new Plataberu[2] { CharacterData._Plataberu, GlobalValue.enemy };
     private bool BattleRunned = false;
+    private bool gottenBeta = false;
 
     private void Start()
     {
@@ -201,6 +202,7 @@ public class BattleDirector_n : MonoBehaviour
                 count = 0;
                 commands.choicing = true;
                 BattleRunned = false;
+                gottenBeta = false;
                 foreach (var beru in plataberus)
                     beru.WaveReset();
 
@@ -226,29 +228,62 @@ public class BattleDirector_n : MonoBehaviour
             EnemyCommandSet();
             Debug.Log(plataberus[0].DebugString());
             Debug.Log(plataberus[1].DebugString());
-
-            switch (file.SendProgress)
+            if (gottenBeta)
             {
-                case 1:
-                    if (ServerCommunication.alpha)
-                        plataberus[1] 
-                            = ConvertorXML.DeserializeBattleDataBeta(Application.persistentDataPath + $"/BattleData_{ServerCommunication.EnemyName}").WriteData(plataberus[1]);
-                    count = 0;
-                    BattleRunned = true;
-                    file.SendProgress = -1;
-                    break;
-                case -1:
-                    if(ServerCommunication.alpha)
-                    {
-                        file.ReceiveFile($"BattleData_{ServerCommunication.EnemyName}",5001);
-                    }
-                    else
-                    {
-                        string fileName = $"Plataberu_{ServerCommunication.UserName}";
-                        ConvertorXML.SerializeBattleDataBeta(plataberus[0], Application.persistentDataPath + "/" + fileName);
-                        StartCoroutine(file.UploadFileCoroutine(fileName));
-                    }
-                    break;
+                ////****Ç±Ç±ÇÃèàóùÇÕÉRÉsÉyÇµÇΩÇæÇØÇ»ÇÃÇ≈èCê≥ÇµÇ‹Ç∑****////
+                switch (file.SendProgress)
+                {
+                    case 1:
+                        if (!ServerCommunication.alpha)
+                            plataberus[1]
+                                = ConvertorXML.DeserializeBattleDataBeta(Application.persistentDataPath + $"/BattleData_Alpha").WriteData(plataberus[1]);
+                        gottenBeta = true;
+                        file.SendProgress = -1;
+                        break;
+                    case -1:
+                        if (!ServerCommunication.alpha)
+                        {
+                            file.ReceiveFile($"BattleData_Alpha", 5001);
+                        }
+                        else
+                        {
+                            RunBattle();
+                            string fileName = $"BattleData_Alpha";
+                            ConvertorXML.SerializeBattleDataBeta(plataberus[0], Application.persistentDataPath + "/" + fileName);
+                            StartCoroutine(file.UploadFileCoroutine(fileName));
+                        }
+                        break;
+                }
+                ////////////////////////////////////////////////////
+                count = 0;
+                BattleRunned = true;
+            }
+            else
+            {
+
+
+                switch (file.SendProgress)
+                {
+                    case 1:
+                        if (ServerCommunication.alpha)
+                            plataberus[1]
+                                = ConvertorXML.DeserializeBattleDataBeta(Application.persistentDataPath + $"/BattleData_Beta").WriteData(plataberus[1]);
+                        gottenBeta = true;
+                        file.SendProgress = -1;
+                        break;
+                    case -1:
+                        if (ServerCommunication.alpha)
+                        {
+                            file.ReceiveFile($"BattleData_Beta", 5001);
+                        }
+                        else
+                        {
+                            string fileName = $"BattleData_Beta";
+                            ConvertorXML.SerializeBattleDataBeta(plataberus[0], Application.persistentDataPath + "/" + fileName);
+                            StartCoroutine(file.UploadFileCoroutine(fileName));
+                        }
+                        break;
+                }
             }
         }
     }

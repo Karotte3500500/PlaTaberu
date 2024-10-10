@@ -1,4 +1,5 @@
 using GameCharacterManagement;
+using XmlConverting;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -37,11 +38,14 @@ public class BattleDirector_n : MonoBehaviour
     public float[] displayHP = new float[2];
 
     private Commands_n commands;
+    private FileControl file;
     private Plataberu[] plataberus = new Plataberu[2] { CharacterData._Plataberu, GlobalValue.enemy };
     private bool BattleRunned = false;
 
     private void Start()
     {
+        ServerCommunication.SetAddress();
+        GlobalValue.enemy = ServerCommunication._EnemyCharacter;
         for (int i = 0; i < 2; i++)
         {
             var beru = plataberus[i];
@@ -55,6 +59,7 @@ public class BattleDirector_n : MonoBehaviour
             displayHP[i] = beru.ActualStatus.HP;
         }
         menu.SetActive(false);
+        file = FindObjectOfType<FileControl>();
         commands = FindObjectOfType<Commands_n>();
 
         characters = new GameObject[2] { friendImg, enemyImg };
@@ -142,7 +147,6 @@ public class BattleDirector_n : MonoBehaviour
 
     private int count = 0;
     private int turnCount = 1;
-    private int beforTurn = 0;
     private bool endAnimation = false;
     private void MoveBattle()
     {
@@ -223,9 +227,29 @@ public class BattleDirector_n : MonoBehaviour
             Debug.Log(plataberus[0].DebugString());
             Debug.Log(plataberus[1].DebugString());
 
-            RunBattle();
-            count = 0;
-            BattleRunned = true;
+            switch (file.SendProgress)
+            {
+                case 1:
+                    if (ServerCommunication.alpha)
+                        plataberus[1] 
+                            = ConvertorXML.DeserializeBattleDataBeta(Application.persistentDataPath + $"/BattleData_{ServerCommunication.EnemyName}").WriteData(plataberus[1]);
+                    count = 0;
+                    BattleRunned = true;
+                    file.SendProgress = -1;
+                    break;
+                case -1:
+                    if(ServerCommunication.alpha)
+                    {
+                        file.ReceiveFile($"BattleData_{ServerCommunication.EnemyName}",5001);
+                    }
+                    else
+                    {
+                        string fileName = $"Plataberu_{ServerCommunication.UserName}";
+                        ConvertorXML.SerializeBattleDataBeta(plataberus[0], Application.persistentDataPath + "/" + fileName);
+                        StartCoroutine(file.UploadFileCoroutine(fileName));
+                    }
+                    break;
+            }
         }
     }
 

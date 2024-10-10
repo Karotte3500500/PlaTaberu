@@ -68,7 +68,7 @@ public class FileControl : MonoBehaviour
 
             if (!File.Exists(filePath))
             {
-                using (FileStream fs = File.Create(filePath)) ;
+                File.Create(filePath);
             }
 
             // 受信したデータをファイルに書き込み
@@ -99,10 +99,11 @@ public class FileControl : MonoBehaviour
         }
     }
 
+
     // 任意のファイルが存在するかどうかを確認するメソッド
     public bool CheckIfFileExists(string fileName)
     {
-        string filePath = Path.Combine(Application.persistentDataPath, fileName);
+        string filePath = Path.Combine(Application.persistentDataPath, $"{fileName}.xml");
         return File.Exists(filePath);
     }
 }

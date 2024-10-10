@@ -6,7 +6,7 @@ using System.IO;
 public class ToBattleDirector : MonoBehaviour
 {
     private int count = 0;
-    private bool sendData = false;
+    private bool receiveData = false;
     private string path;
 
     private FileControl fileControl;
@@ -14,29 +14,31 @@ public class ToBattleDirector : MonoBehaviour
 
     private void Start()
     {
+        fileControl = FindObjectOfType<FileControl>();
+        controlUI = FindObjectOfType<ControlUI>();
+        ServerCommunication.SetAddress();
+
         path = Application.persistentDataPath + $"/Plataberu_{ServerCommunication.UserName}";
 
         Debug.Log(Application.persistentDataPath + $"/Plataberu_{ServerCommunication.UserName}");
         Debug.Log($"Plataberu_{ServerCommunication.UserName}");
 
-        fileControl = FindObjectOfType<FileControl>();
-        controlUI = FindObjectOfType<ControlUI>();
-
         ConvertorXML.ConvertXML(CharacterData._Plataberu, path);
-        fileControl.UploadFileCoroutine($"Plataberu_{ServerCommunication.UserName}");
+        StartCoroutine(fileControl.UploadFileCoroutine($"Plataberu_{ServerCommunication.UserName}"));
 
     }
     private void Update()
     {
         Debug.Log(fileControl.SendProgress);
-        if (fileControl.SendProgress == 1 && !sendData)
+        if (!receiveData && fileControl.SendProgress == 1 )
         {
             Debug.Log("efcd");
-            sendData = true;
             fileControl.SendProgress = -1;
             fileControl.ReceiveFile($"Plataberu_{ServerCommunication.EnemyName}", 5001);
+            if (fileControl.SendProgress == 1)
+                receiveData = true;
         }
-        if (fileControl.SendProgress == 1 && sendData)
+        if (receiveData)
         {
             string pathB = Application.persistentDataPath + $"/Plataberu_{ServerCommunication.EnemyName}.xml";
             ServerCommunication._EnemyCharacter = ConvertorXML.ConvertPlataberu(pathB);

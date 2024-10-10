@@ -195,6 +195,16 @@ namespace XmlConverting
             this.DamagesInflicted = beru.DamagesInflicted;
             this.BattleStatus = beru.BattleStatus.ToArray();
         }
+
+        public (Plataberu Friend,Plataberu Enemy) WriteData(Plataberu friend, Plataberu enemy)
+        {
+            enemy.BattleCommand.SelectedCommand = this.SelectedCommand;
+            friend.DamagesSuffered = this.DamagesSuffered;
+            friend.DamagesInflicted = this.DamagesInflicted;
+            friend.BattleStatus = Status.IntoStatus(this.BattleStatus);
+
+            return (friend, enemy);
+        }
     }
 
     public class BattleDataBeta
@@ -206,6 +216,12 @@ namespace XmlConverting
         public BattleDataBeta(Plataberu beru)
         {
             this.SelectedCommand = beru.BattleCommand.SelectedCommand;
+        }
+
+        public Plataberu WriteData(Plataberu beru)
+        {
+            beru.BattleCommand.SelectedCommand = this.SelectedCommand;
+            return beru;
         }
     }
 }

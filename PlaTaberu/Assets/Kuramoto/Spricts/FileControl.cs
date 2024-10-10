@@ -2,45 +2,27 @@ using System.Collections;
 using System.IO;
 using System;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.Net.Sockets;
 
-public class send_file : MonoBehaviour
+public class FileControl : MonoBehaviour
 {
-    ControlUI controlUI;
-
-    public Button ReturnButton;
-
-    /*デバッグ用   *実際は削除  */
-    [SerializeField]
-    private Text errorMess;
-
-    private string filePath; // アップロードしたいファイルのパスを指定
     private string url = "http://192.168.11.3/upload.php"; // サーバーのURLを指定
     // サーバー設定
     private string host = "192.168.11.3";  // サーバーのIPアドレス
-    private int port = 5001;                         // サーバーと同じポート番号
 
-    void Start()
+    public int SendProgress = -1;
+
+    public IEnumerator UploadFileCoroutine(string fileName)
     {
-        controlUI = FindObjectOfType<ControlUI>();
-        filePath = Application.persistentDataPath + @"/texample.xml";
+        SendProgress = 0;
+        if (!CheckIfFileExists(fileName))
+            CreateFile(fileName);
+        string path = Path.Combine(Application.persistentDataPath, $"{fileName}.xml");
 
-        ReturnButton.onClick.AddListener(OnClick);
-    }
-
-    public void OnClick()
-    {
-        CreateExampleFile(); // ファイル作成メソッドを呼び出し
-        StartCoroutine(UploadFileCoroutine(filePath, url));
-    }
-
-    IEnumerator UploadFileCoroutine(string filePath, string url)
-    {
-        byte[] fileData = File.ReadAllBytes(filePath);
+        byte[] fileData = File.ReadAllBytes(path);
         WWWForm form = new WWWForm();
-        form.AddBinaryData("file", fileData, Path.GetFileName(filePath));
+        form.AddBinaryData("file", fileData, Path.GetFileName(path));
 
         using (UnityWebRequest www = UnityWebRequest.Post(url, form))
         {
@@ -50,20 +32,20 @@ public class send_file : MonoBehaviour
             {
                 Debug.Log("ファイルのアップロードに成功しました！");
                 Debug.Log(www.downloadHandler.text);
-
-                ReceiveFile();
+                SendProgress = 1;
             }
             else
             {
                 Debug.LogError("ファイルのアップロードに失敗しました。");
                 Debug.LogError("ステータスコード: " + www.responseCode);
                 Debug.LogError("レスポンス: " + www.downloadHandler.text);
+                SendProgress = -2;
             }
         }
     }
-    void CreateExampleFile()
+    public void CreateFile(string fileName)
     {
-        string path = Path.Combine(Application.persistentDataPath, "texample.xml");
+        string path = Path.Combine(Application.persistentDataPath, $"{fileName}.xml");
         if (!File.Exists(path))
         {
             string xmlContent = "<root>\n\t<example>Sample Data</example>\n</root>";
@@ -72,8 +54,9 @@ public class send_file : MonoBehaviour
         }
     }
 
-    public void ReceiveFile()
+    public void ReceiveFile(string fileName, int port)
     {
+        SendProgress = 0;
         try
         {
             // ソケットのセットアップ
@@ -81,17 +64,11 @@ public class send_file : MonoBehaviour
             NetworkStream stream = client.GetStream();
 
             // ファイルを保存するパス
-            string filePath = Path.Combine(Application.persistentDataPath, "received_file.xml");
+            string filePath = Path.Combine(Application.persistentDataPath, $"{fileName}.xml");
 
             if (!File.Exists(filePath))
             {
-                using (FileStream fs = File.Create(filePath));
-
-                /*
-                string xmlContent = "<root>\n\t<example>Sample Data</example>\n</root>";
-                File.WriteAllText(filePath, xmlContent);
-                Debug.Log("File created: " + filePath);
-                */
+                using (FileStream fs = File.Create(filePath)) ;
             }
 
             // 受信したデータをファイルに書き込み
@@ -108,18 +85,24 @@ public class send_file : MonoBehaviour
             }
 
             Debug.Log("ファイル受信が完了しました: " + filePath);
-            //デバッグ後削除
-            errorMess.text = "ファイル受信が完了しました: " + filePath;
 
             // ソケットを閉じる
             stream.Close();
             client.Close();
+
+            SendProgress = 1;
         }
         catch (Exception e)
         {
             Debug.LogError("エラーが発生しました: " + e.Message);
-            //デバッグ後削除
-            errorMess.text = "エラーが発生しました: " + e.Message;
+            SendProgress = -2;
         }
+    }
+
+    // 任意のファイルが存在するかどうかを確認するメソッド
+    public bool CheckIfFileExists(string fileName)
+    {
+        string filePath = Path.Combine(Application.persistentDataPath, fileName);
+        return File.Exists(filePath);
     }
 }

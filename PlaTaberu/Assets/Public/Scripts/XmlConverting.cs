@@ -11,19 +11,26 @@ namespace XmlConverting
         //引数に与えられたPlataberu型のオブジェクトをXMLファイルのデータに変換
         public static void ConvertXML(Plataberu beru, string path)
         {
+            path += ".xml";
+            if (!FileExists(path)) File.Create(path);
+
             //Plataberu型を変換
             PlataberuData data = new PlataberuData(beru);
 
             XmlSerializer serialData = new XmlSerializer(typeof(PlataberuData));
-            StreamWriter sw = new StreamWriter(path, false, new System.Text.UTF8Encoding(false));
 
-            serialData.Serialize(sw, data);
-            sw.Close();
+            using (StreamWriter sw = new StreamWriter(path, false, new System.Text.UTF8Encoding(false)))
+            {
+                serialData.Serialize(sw, data);
+            }
         }
 
         //XMLファイルのデータをPlataberu型に変換
         public static Plataberu ConvertPlataberu(string path)
         {
+            path += ".xml";
+            if (!FileExists(path)) File.Create(path);
+
             PlataberuData data;
 
             XmlSerializer serialData = new XmlSerializer(typeof(PlataberuData));
@@ -38,30 +45,39 @@ namespace XmlConverting
         //XMLファイルにバトルデータアルファを保存
         public static void SerializeBattleDataAlpha(Plataberu beru, string path)
         {
+            path += ".xml";
+            if (!FileExists(path)) File.Create(path);
+
             //Plataberu型をBattleD
             BattleDataAlpha battleData = new BattleDataAlpha(beru);
             XmlSerializer serialData = new XmlSerializer(typeof(BattleDataAlpha));
 
-            StreamWriter sw = new StreamWriter(path, false, new System.Text.UTF8Encoding(false));
-
-            serialData.Serialize(sw, battleData);
-            sw.Close();
+            using (StreamWriter sw = new StreamWriter(path, false, new System.Text.UTF8Encoding(false)))
+            {
+                serialData.Serialize(sw, battleData);
+            }
         }
         //XMLファイルにバトルデータベータを保存
         public static void SerializeBattleDataBeta(Plataberu beru, string path)
         {
+            path += ".xml";
+            if (!FileExists(path)) File.Create(path);
+
             BattleDataBeta battleData = new BattleDataBeta(beru);
             XmlSerializer serialData = new XmlSerializer(typeof(BattleDataBeta));
 
-            StreamWriter sw = new StreamWriter(path, false, new System.Text.UTF8Encoding(false));
-
-            serialData.Serialize(sw, battleData);
-            sw.Close();
+            using (StreamWriter sw = new StreamWriter(path, false, new System.Text.UTF8Encoding(false)))
+            {
+                serialData.Serialize(sw, battleData);
+            }
         }
 
         //XMLファイルのデータをBattleDataAlpha型に変換
         public static BattleDataAlpha DeserializeBattleDataAlpha(string path)
         {
+            path += ".xml";
+            if (!FileExists(path)) return null;
+
             BattleDataAlpha data;
 
             XmlSerializer serialData = new XmlSerializer(typeof(BattleDataAlpha));
@@ -76,6 +92,9 @@ namespace XmlConverting
         //XMLファイルのデータをBattleDataBeta型に変換
         public static BattleDataBeta DeserializeBattleDataBeta(string path)
         {
+            path += ".xml";
+            if (!FileExists(path)) return null;
+
             BattleDataBeta data;
 
             XmlSerializer serialData = new XmlSerializer(typeof(BattleDataBeta));
@@ -85,6 +104,13 @@ namespace XmlConverting
                 data = (BattleDataBeta)serialData.Deserialize(sr);
             }
             return data;
+        }
+
+
+        public static bool FileExists(string filePath)
+        {
+            return File.Exists(filePath);
+
         }
     }
 

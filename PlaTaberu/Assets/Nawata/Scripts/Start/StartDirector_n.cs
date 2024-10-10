@@ -4,5 +4,9 @@ using UnityEngine;
 
 public class StartDirector_n : MonoBehaviour
 {
+    private void Start()
+    {
+        ServerCommunication.SetAddress();
 
+    }
 }

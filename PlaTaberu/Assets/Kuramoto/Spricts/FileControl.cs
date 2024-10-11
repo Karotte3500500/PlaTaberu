@@ -106,7 +106,7 @@ public class FileControl : MonoBehaviour
         {
             // ソケットのセットアップ
             TcpClient client = new TcpClient(host, port);
-            client.ReceiveTimeout = 30000; // 10秒のタイムアウトを設定
+            client.ReceiveTimeout = 10000; // 10秒のタイムアウトを設定
             NetworkStream stream = client.GetStream();
 
             // ファイルを保存するパス
@@ -115,7 +115,7 @@ public class FileControl : MonoBehaviour
             // ファイルが存在しない場合は作成
             if (!File.Exists(filePath))
             {
-                using (FileStream fs = File.Create(filePath)) ;
+                File.Create(filePath);
             }
 
             // 受信したデータをファイルに書き込み
@@ -157,8 +157,8 @@ public class FileControl : MonoBehaviour
     }
 
 
-        // 任意のファイルが存在するかどうかを確認するメソッド
-        public bool CheckIfFileExists(string fileName)
+    // 任意のファイルが存在するかどうかを確認するメソッド
+    public bool CheckIfFileExists(string fileName)
     {
         string filePath = Path.Combine(Application.persistentDataPath, $"{fileName}.xml");
         return File.Exists(filePath);

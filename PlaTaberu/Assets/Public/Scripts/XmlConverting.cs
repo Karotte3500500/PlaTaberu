@@ -43,13 +43,13 @@ namespace XmlConverting
         }
 
         //XMLファイルにバトルデータアルファを保存
-        public static void SerializeBattleDataAlpha(Plataberu beru, string path)
+        public static void SerializeBattleDataAlpha(Plataberu friend, Plataberu enemy, string path)
         {
             path += ".xml";
             if (!FileExists(path)) File.Create(path);
 
-            //Plataberu型をBattleD
-            BattleDataAlpha battleData = new BattleDataAlpha(beru);
+            //Plataberu型をBattleDataAlpha型へ変換
+            BattleDataAlpha battleData = new BattleDataAlpha(friend, enemy);
             XmlSerializer serialData = new XmlSerializer(typeof(BattleDataAlpha));
 
             using (StreamWriter sw = new StreamWriter(path, false, new System.Text.UTF8Encoding(false)))
@@ -177,31 +177,46 @@ namespace XmlConverting
 
     public class BattleDataAlpha
     {
-        //選択したコマンド
-        public List<int> SelectedCommand { get; set; }
-        //被ダメージ
-        public List<float> DamagesSuffered { get; set; } = new List<float>();
-        //与ダメージ
-        public List<float> DamagesInflicted { get; set; } = new List<float>();
-        //バトルステータスを送信
-        public float[] BattleStatus { get; set; } = new float[3];
+        // 選択したコマンド
+        public List<int> SelectedCommand { get; set; } = new List<int>();
+        // 被ダメージ      ※Enemy,Friendは読み取る際の視点で命名
+        public List<float> FriendsDamagesSuffered { get; set; }
+        public List<float> EnemysDamagesSuffered { get; set; }
+        // 与ダメージ      ※Enemy,Friendは読み取る際の視点で命名
+        public List<float> FriendsDamagesInflicted { get; set; }
+        public List<float> EnemysDamagesInflicted { get; set; }
+        // バトルステータスを送信      ※Enemy,Friendは読み取る際の視点で命名
+        public float[] FriendsBattleStatus { get; set; } = new float[3];
+        public float[] EnemysBattleStatus { get; set; } = new float[3];
 
         public BattleDataAlpha() { }
 
-        public BattleDataAlpha(Plataberu beru)
+        public BattleDataAlpha(Plataberu friend, Plataberu enemy)
         {
-            this.SelectedCommand = beru.BattleCommand.SelectedCommand;
-            this.DamagesSuffered = beru.DamagesSuffered;
-            this.DamagesInflicted = beru.DamagesInflicted;
-            this.BattleStatus = beru.BattleStatus.ToArray();
+            //Enemy,Friendは読み取る際にあわせて格納する
+            this.SelectedCommand = friend.BattleCommand.SelectedCommand;
+
+            this.FriendsDamagesSuffered = enemy.DamagesSuffered;
+            this.EnemysDamagesSuffered = friend.DamagesSuffered;
+
+            this.FriendsDamagesInflicted = enemy.DamagesInflicted;
+            this.EnemysDamagesInflicted = friend.DamagesInflicted;
+
+            this.FriendsBattleStatus = enemy.BattleStatus.ToArray();
+            this.EnemysBattleStatus = friend.BattleStatus.ToArray();
         }
 
-        public (Plataberu Friend,Plataberu Enemy) WriteData(Plataberu friend, Plataberu enemy)
+        public (Plataberu Friend, Plataberu Enemy) WriteData(Plataberu friend, Plataberu enemy)
         {
             enemy.BattleCommand.SelectedCommand = this.SelectedCommand;
-            friend.DamagesSuffered = this.DamagesSuffered;
-            friend.DamagesInflicted = this.DamagesInflicted;
-            friend.BattleStatus = Status.IntoStatus(this.BattleStatus);
+
+            friend.DamagesSuffered = this.FriendsDamagesSuffered;
+            friend.DamagesInflicted = this.FriendsDamagesInflicted;
+            friend.BattleStatus = Status.IntoStatus(this.FriendsBattleStatus);
+
+            enemy.DamagesSuffered = this.EnemysDamagesSuffered;
+            enemy.DamagesInflicted = this.EnemysDamagesInflicted;
+            enemy.BattleStatus = Status.IntoStatus(this.EnemysBattleStatus);
 
             return (friend, enemy);
         }

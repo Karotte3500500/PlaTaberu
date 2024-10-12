@@ -230,13 +230,17 @@ public class BattleDirector_n : MonoBehaviour
             Debug.Log(plataberus[1].DebugString());
             if (gottenBeta)
             {
-                ////****ここの処理はコピペしただけなので修正します****////
+                ////****ここの処理は不安なので要確認****////
                 switch (file.SendProgress)
                 {
                     case 1:
                         if (!ServerCommunication.alpha)
-                            plataberus[1]
-                                = ConvertorXML.DeserializeBattleDataBeta(Application.persistentDataPath + $"/BattleData_Alpha").WriteData(plataberus[1]);
+                        {
+                            var data
+                                = ConvertorXML.DeserializeBattleDataAlpha(Application.persistentDataPath + $"/BattleData_Alpha").WriteData(plataberus[0], plataberus[1]);
+                            plataberus[0] = data.Friend;
+                            plataberus[1] = data.Enemy;
+                        }
                         gottenBeta = true;
                         file.SendProgress = -1;
                         break;
@@ -249,7 +253,7 @@ public class BattleDirector_n : MonoBehaviour
                         {
                             RunBattle();
                             string fileName = $"BattleData_Alpha";
-                            ConvertorXML.SerializeBattleDataBeta(plataberus[0], Application.persistentDataPath + "/" + fileName);
+                            ConvertorXML.SerializeBattleDataAlpha(plataberus[0], plataberus[1], Application.persistentDataPath + "/" + fileName);
                             StartCoroutine(file.UploadFileCoroutine(fileName));
                         }
                         break;

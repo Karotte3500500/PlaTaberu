@@ -54,90 +54,50 @@ public class FileControl : MonoBehaviour
         }
     }
 
-    //public void ReceiveFile(string fileName, int port)
-    //{
-    //    SendProgress = 0;
-    //    try
-    //    {
-    //        // ソケットのセットアップ
-    //        TcpClient client = new TcpClient(host, port);
-    //        NetworkStream stream = client.GetStream();
-
-    //        // ファイルを保存するパス
-    //        string filePath = Path.Combine(Application.persistentDataPath, $"{fileName}.xml");
-
-    //        if (!File.Exists(filePath))
-    //        {
-    //            File.Create(filePath);
-    //        }
-
-    //        // 受信したデータをファイルに書き込み
-    //        using (FileStream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
-    //        {
-    //            byte[] buffer = new byte[1024];
-    //            int bytesRead;
-
-    //            // データを受信し、バッファに書き込む
-    //            while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) > 0)
-    //            {
-    //                fileStream.Write(buffer, 0, bytesRead);
-    //            }
-    //        }
-
-    //        Debug.Log("ファイル受信が完了しました: " + filePath);
-
-    //        // ソケットを閉じる
-    //        stream.Close();
-    //        client.Close();
-
-    //        SendProgress = 1;
-    //    }
-    //    catch (Exception e)
-    //    {
-    //        Debug.LogError("エラーが発生しました: " + e.Message);
-    //        SendProgress = -2;
-    //    }
-    //}
-
     public void ReceiveFile(string fileName, int port)
     {
         SendProgress = 0;
         try
         {
-            // ソケットのセットアップ
-            TcpClient client = new TcpClient(host, port);
-            client.ReceiveTimeout = 10000; // 10秒のタイムアウトを設定
-            NetworkStream stream = client.GetStream();
-
             // ファイルを保存するパス
             string filePath = Path.Combine(Application.persistentDataPath, $"{fileName}.xml");
 
-            // ファイルが存在しない場合は作成
-            if (!File.Exists(filePath))
+            // ファイルが存在する場合はリセット
+            if (CheckIfFileExists(filePath))
             {
-                File.Create(filePath);
+                File.Delete(filePath);
             }
+
+            // ソケットのセットアップとリトライ処理
+            TcpClient client = null;
+            int retryCount = 3;
+            while (retryCount > 0)
+            {
+                try
+                {
+                    client = new TcpClient(host, port);
+                    client.ReceiveTimeout = 180000; // 3分のタイムアウトを設定
+                    break; // 接続成功
+                }
+                catch
+                {
+                    retryCount--;
+                    if (retryCount == 0) throw;
+                }
+            }
+
+            NetworkStream stream = client.GetStream();
 
             // 受信したデータをファイルに書き込み
             using (FileStream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
             {
                 byte[] buffer = new byte[1024];
                 int bytesRead;
-                bool receiving = true;
 
                 // データを受信し、バッファに書き込む
-                while (receiving)
+                while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) > 0)
                 {
-                    bytesRead = stream.Read(buffer, 0, buffer.Length);
-                    if (bytesRead > 0)
-                    {
-                        fileStream.Write(buffer, 0, bytesRead);
-                    }
-                    else
-                    {
-                        // データの終端に達した場合、受信を終了
-                        receiving = false;
-                    }
+                    fileStream.Write(buffer, 0, bytesRead);
                 }
             }
 
@@ -155,6 +115,63 @@ public class FileControl : MonoBehaviour
             SendProgress = -2;
         }
     }
+
+    //public void ReceiveFile(string fileName, int port)
+    //{
+    //    SendProgress = 0;
+    //    try
+    //    {
+    //        // ファイルを保存するパス
+    //        string filePath = Path.Combine(Application.persistentDataPath, $"{fileName}.xml");
+
+    //        // ファイルが存在する場合はリセット
+    //        if (File.Exists(filePath))
+    //        {
+    //            File.Delete(filePath);
+    //        }
+
+    //        // ソケットのセットアップ
+    //        TcpClient client = new TcpClient(host, port);
+    //        client.ReceiveTimeout = 1800000; // 三分のタイムアウトを設定
+    //        NetworkStream stream = client.GetStream();
+
+    //        // 受信したデータをファイルに書き込み
+    //        using (FileStream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+    //        {
+    //            byte[] buffer = new byte[1024];
+    //            int bytesRead;
+    //            bool receiving = true;
+
+    //            // データを受信し、バッファに書き込む
+    //            while (receiving)
+    //            {
+    //                bytesRead = stream.Read(buffer, 0, buffer.Length);
+    //                if (bytesRead > 0)
+    //                {
+    //                    fileStream.Write(buffer, 0, bytesRead);
+    //                }
+    //                else
+    //                {
+    //                    // データの終端に達した場合、受信を終了
+    //                    receiving = false;
+    //                }
+    //            }
+    //        }
+
+    //        Debug.Log("ファイル受信が完了しました: " + filePath);
+
+    //        // ソケットを閉じる
+    //        stream.Close();
+    //        client.Close();
+
+    //        SendProgress = 1;
+    //    }
+    //    catch (Exception e)
+    //    {
+    //        Debug.LogError("エラーが発生しました: " + e.Message);
+    //        SendProgress = -2;
+    //    }
+    //}
 
 
     // 任意のファイルが存在するかどうかを確認するメソッド

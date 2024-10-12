@@ -40,7 +40,7 @@ public class ToBattleDirector : MonoBehaviour
         }
         if (receiveData)
         {
-            string pathB = Application.persistentDataPath + $"/Plataberu_{ServerCommunication.EnemyName}.xml";
+            string pathB = Application.persistentDataPath + $"/Plataberu_{ServerCommunication.EnemyName}";
             ServerCommunication._EnemyCharacter = ConvertorXML.ConvertPlataberu(pathB);
             Debug.Log(ServerCommunication._EnemyCharacter.DebugString());
             controlUI.SwitchScene("Battle");

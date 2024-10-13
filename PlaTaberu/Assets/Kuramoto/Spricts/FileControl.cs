@@ -54,21 +54,77 @@ public class FileControl : MonoBehaviour
         }
     }
 
+    //public void ReceiveFile(string fileName, int port)
+    //{
+    //    SendProgress = 0;
+    //    try
+    //    {
+    //        string filePath = Path.Combine(Application.persistentDataPath, $"{fileName}.xml");
+
+    //        if (File.Exists(filePath))
+    //        {
+    //            File.Delete(filePath);
+    //        }
+
+    //        TcpClient client = null;
+    //        int retryCount = 3;
+    //        while (retryCount > 0)
+    //        {
+    //            try
+    //            {
+    //                client = new TcpClient(host, port);
+    //                client.ReceiveTimeout = 1800000; // 30分のタイムアウトを設定するのです
+    //                break;
+    //            }
+    //            catch
+    //            {
+    //                retryCount--;
+    //                if (retryCount == 0) throw;
+    //            }
+    //        }
+
+    //        NetworkStream stream = client.GetStream();
+
+    //        using (FileStream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+    //        {
+    //            byte[] buffer = new byte[4096];
+    //            int bytesRead;
+
+    //            while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) > 0)
+    //            {
+    //                fileStream.Write(buffer, 0, bytesRead);
+    //            }
+    //        }
+
+    //        Debug.Log("ファイル受信が完了しました: " + filePath);
+
+    //        stream.Close();
+    //        client.Close();
+
+    //        SendProgress = 1;
+    //    }
+    //    catch (Exception e)
+    //    {
+    //        Debug.LogError("エラーが発生しました: " + e.Message);
+    //        SendProgress = -2;
+    //    }
+    //}
+
     public void ReceiveFile(string fileName, int port)
     {
         SendProgress = 0;
         try
         {
-            // ファイルを保存するパス
+            //ファイルを保存するパス
             string filePath = Path.Combine(Application.persistentDataPath, $"{fileName}.xml");
 
-            // ファイルが存在する場合はリセット
+            //ファイルが存在する場合は削除
             if (CheckIfFileExists(filePath))
             {
                 File.Delete(filePath);
             }
 
-            // ソケットのセットアップとリトライ処理
+            //ソケットのセットアップとリトライ処理
             TcpClient client = null;
             int retryCount = 3;
             while (retryCount > 0)
@@ -76,7 +132,7 @@ public class FileControl : MonoBehaviour
                 try
                 {
                     client = new TcpClient(host, port);
-                    client.ReceiveTimeout = 180000; // 3分のタイムアウトを設定
+                    client.ReceiveTimeout = 1800000; // 3分のタイムアウトを設定
                     break; // 接続成功
                 }
                 catch
@@ -88,13 +144,13 @@ public class FileControl : MonoBehaviour
 
             NetworkStream stream = client.GetStream();
 
-            // 受信したデータをファイルに書き込み
+            //受信したデータをファイルに書き込み
             using (FileStream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
             {
-                byte[] buffer = new byte[1024];
+                byte[] buffer = new byte[4096];
                 int bytesRead;
 
-                // データを受信し、バッファに書き込む
+                //データを受信し、バッファに書き込む
                 while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) > 0)
                 {
                     fileStream.Write(buffer, 0, bytesRead);
@@ -103,7 +159,7 @@ public class FileControl : MonoBehaviour
 
             Debug.Log("ファイル受信が完了しました: " + filePath);
 
-            // ソケットを閉じる
+            //ソケットを閉じる
             stream.Close();
             client.Close();
 
@@ -115,6 +171,7 @@ public class FileControl : MonoBehaviour
             SendProgress = -2;
         }
     }
+
 
     //public void ReceiveFile(string fileName, int port)
     //{
@@ -174,7 +231,7 @@ public class FileControl : MonoBehaviour
     //}
 
 
-    // 任意のファイルが存在するかどうかを確認するメソッド
+    //任意のファイルが存在するかどうかを確認するメソッド
     public bool CheckIfFileExists(string fileName)
     {
         string filePath = Path.Combine(Application.persistentDataPath, $"{fileName}.xml");

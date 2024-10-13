@@ -36,11 +36,8 @@ public class Circulation_n : MonoBehaviour
             switch (count)
             {
                 case 100:
-                    transition.GetComponent<RawImage>().color = Color.clear;
+                    transition.GetComponent<StarsMove>().canMove = true;
                     transition.SetActive(true);
-                    break;
-                case 110:
-                    transition.GetComponent<RawImage>().color = Color.white;
                     break;
                 case 290:
                     myChar = PlataberuManager.GrowUp(myChar, myChar.GrowUP());
@@ -48,10 +45,9 @@ public class Circulation_n : MonoBehaviour
                     characterManager.ID = myChar.ID;
                     break;
                 case 300:
-                    transition.SetActive(false);
                     mess.text = $"Ç®ÇﬂÇ≈Ç∆Ç§ÅIÅI\n{myChar.Name}Ç…Ç»Ç¡ÇΩÇÊ";
                     break;
-                case 600:
+                case 700:
                     controlUI.SwitchScene("Grow", true);
                     break;
             }                

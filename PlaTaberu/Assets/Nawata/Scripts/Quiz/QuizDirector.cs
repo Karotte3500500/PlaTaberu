@@ -4,6 +4,7 @@ using System;
 using UnityEngine.UI;
 using UnityEngine;
 using UnityEditor;
+using GameCharacterManagement;
 
 public class QuizDirector : MonoBehaviour
 {
@@ -27,13 +28,20 @@ public class QuizDirector : MonoBehaviour
     private GameObject Exp;
     [SerializeField]
     private GameObject playObj;
+    [SerializeField]
+    private GameObject resultObj;
+    [SerializeField]
+    private Text[] resultTexts;
 
     private int wave = 0;
     private int beforWave = -1;
     private bool isPlaying = true;
 
+    private bool hadOpenedResult = false;
     private float time = 0;
     private int[] result = new int[2];
+
+    private int countNum = 0;
 
     private List<int> choice = new List<int>();
 
@@ -42,6 +50,7 @@ public class QuizDirector : MonoBehaviour
         playObj.SetActive(true);
         controlUI = FindObjectOfType<ControlUI>();
         Exp.SetActive(false);
+        resultObj.SetActive(false);
 
         for (int i = 0; i < 3; i++)
         {
@@ -73,8 +82,33 @@ public class QuizDirector : MonoBehaviour
         }
         else
         {
-            playObj.SetActive(false);
+            if (!hadOpenedResult)
+            {
+                playObj.SetActive(false);
+                resultObj.SetActive(true);
 
+                string resultAdd = "";
+
+                List<Item> items = new List<Item>();
+                var random = new System.Random();
+                for (int i = 0; i < result[0]; i++)
+                {
+                    int num = random.Next(1, 5);
+                    resultAdd += PlataberuManager.GetItem(num).Name + "\n";
+                    PlayerData._Items[num] += 1;
+                }
+
+                resultTexts[0].text = $"{result[0]}";
+                resultTexts[1].text = $"{result[1]}";
+                resultTexts[2].text = $"{time:000.0}";
+                resultTexts[3].text = $"{resultAdd}";
+
+                hadOpenedResult = true;
+            }
+            if (countNum == 300)
+                controlUI.SwitchScene("Home");
+
+            countNum++;
         }
     }
 

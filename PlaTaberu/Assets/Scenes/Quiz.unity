@@ -502,6 +502,12 @@ MonoBehaviour:
   answersBack: {fileID: 392260007}
   Exp: {fileID: 362147471}
   playObj: {fileID: 1297848866}
+  resultObj: {fileID: 877781241}
+  resultTexts:
+  - {fileID: 731136531}
+  - {fileID: 1619695891}
+  - {fileID: 1963901867}
+  - {fileID: 1293361307}
 --- !u!1 &362147471
 GameObject:
   m_ObjectHideFlags: 0
@@ -1527,7 +1533,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &877781242
 RectTransform:
   m_ObjectHideFlags: 0

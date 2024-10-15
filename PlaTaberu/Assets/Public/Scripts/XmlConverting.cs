@@ -2,6 +2,7 @@ using GameCharacterManagement;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using System.IO;
+using System.Xml;
 
 //XML‚É•ÏŠ·‚·‚é
 namespace XmlConverting
@@ -106,6 +107,21 @@ namespace XmlConverting
             return data;
         }
 
+        public static Status ReadPlasticsData(string path)
+        {
+            Status plas = new Status();
+
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.Load((path + ".xml"));
+
+            XmlNode pictureInfoNode = xmlDoc.SelectSingleNode("PictureInformation");
+
+            plas.ATK = int.Parse(pictureInfoNode["RedObjects"].InnerText);
+            plas.DEF = int.Parse(pictureInfoNode["BlueObjects"].InnerText);
+            plas.HP = int.Parse(pictureInfoNode["GreenObjects"].InnerText);
+
+            return plas;
+        }
 
         public static bool FileExists(string filePath)
         {

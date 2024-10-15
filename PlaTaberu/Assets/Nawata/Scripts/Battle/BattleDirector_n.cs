@@ -2,6 +2,7 @@ using GameCharacterManagement;
 using XmlConverting;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -39,7 +40,7 @@ public class BattleDirector_n : MonoBehaviour
 
     private Commands_n commands;
     private FileControl file;
-    private Plataberu[] plataberus = new Plataberu[2] { CharacterData._Plataberu, GlobalValue.enemy };
+    private Plataberu[] plataberus = new Plataberu[2] { CharacterData._Plataberu, ServerCommunication._EnemyCharacter };
     private bool BattleRunned = false;
     private bool gottenBeta = false;
 
@@ -97,53 +98,6 @@ public class BattleDirector_n : MonoBehaviour
         //HPバーの処理
         setHpbar(0);
         setHpbar(1);
-    }
-
-    private int setTurn(Plataberu beru)
-    {
-        int turn = 0;
-        foreach (var com in beru.BattleCommand.SelectedCommand)
-            turn++;
-        return turn;
-    }
-
-    private void action(int num,int turn)
-    {
-        if (turn > setTurn(plataberus[num]) - 1) return;
-        plataberus[num].BattleMove(plataberus[num], plataberus[num == 0 ? 1 : 0], turn);
-    }
-    //戦闘処理をする
-    private void RunBattle()
-    {
-        //デバッグ用
-        int len = setTurn(plataberus[0]) > setTurn(plataberus[1]) ? setTurn(plataberus[0]) : setTurn(plataberus[1]);
-        Debug.Log(len);
-        for (int i = 0; i < len; i++)
-        {
-            action(0, i);
-            action(1, i);
-        }
-    }
-
-    //アニメーションを実行する
-    private void RunBattleAnimation(int beru1, int beru2, int turn)
-    {
-        //インデックス外の場合は処理をしない
-        int[] maxTurn = new int[2] { setTurn(plataberus[beru1]), setTurn(plataberus[beru2]) };
-        Debug.Log($"{maxTurn[0]} , {maxTurn[1]} , {turn} , {maxTurn[0] < turn}");
-        if (maxTurn[0] < turn) return;
-
-        //コマンドに応じたアニメションを設定
-        characterImg[beru1].CharacterAnimation
-            = plataberus[beru1].BattleCommand.SelectedCommand[turn - 1] + 4;
-
-        //ガードの有無
-        bool hadGuard = maxTurn[1] < turn ? false : plataberus[beru2].BattleCommand.SelectedCommand[turn - 1] == 1;
-
-        //被弾モーションを相手に設定する
-        if (plataberus[beru1].BattleCommand.SelectedCommand[turn - 1] == 0 && hadGuard)
-            characterImg[beru2].CharacterAnimation = 5;
-        endAnimation = false;
     }
 
     private int count = 0;
@@ -225,14 +179,17 @@ public class BattleDirector_n : MonoBehaviour
         else
         {
             /*デバッグ用*/
-            EnemyCommandSet();
+            //EnemyCommandSet();
             Debug.Log(plataberus[0].DebugString());
             Debug.Log(plataberus[1].DebugString());
+            //betaファイルが届いたなら
             if (gottenBeta)
             {
                 ////****ここの処理は不安なので要確認****////
+                //ファイルの送受信状態を確認
                 switch (file.SendProgress)
                 {
+                    //正常に送受信できた場合
                     case 1:
                         if (!ServerCommunication.alpha)
                         {
@@ -240,14 +197,30 @@ public class BattleDirector_n : MonoBehaviour
                                 = ConvertorXML.DeserializeBattleDataAlpha(Application.persistentDataPath + $"/BattleData_Alpha").WriteData(plataberus[0], plataberus[1]);
                             plataberus[0] = data.Friend;
                             plataberus[1] = data.Enemy;
+                            RunBattle();
                         }
                         gottenBeta = true;
                         file.SendProgress = -1;
                         break;
+                    //まだ送受信されていない場合
                     case -1:
                         if (!ServerCommunication.alpha)
                         {
-                            file.ReceiveFile($"BattleData_Alpha", 5001);
+                            file.ReceiveFile($"BattleData_Alpha", 5002);
+                        }
+                        else
+                        {
+                            RunBattle();
+                            string fileName = $"BattleData_Alpha";
+                            ConvertorXML.SerializeBattleDataAlpha(plataberus[0], plataberus[1], Application.persistentDataPath + "/" + fileName);
+                            StartCoroutine(file.UploadFileCoroutine(fileName));
+                        }
+                        break;
+                    //送受信でエラーが発生した場合
+                    case -2:
+                        if (!ServerCommunication.alpha)
+                        {
+                            file.ReceiveFile($"BattleData_Alpha", 5002);
                         }
                         else
                         {
@@ -262,12 +235,13 @@ public class BattleDirector_n : MonoBehaviour
                 count = 0;
                 BattleRunned = true;
             }
+            //betaファイルが届いていないなら
             else
             {
-
-
+                //ファイルの送受信状態を確認
                 switch (file.SendProgress)
                 {
+                    //正常に送受信できた場合
                     case 1:
                         if (ServerCommunication.alpha)
                             plataberus[1]
@@ -275,10 +249,24 @@ public class BattleDirector_n : MonoBehaviour
                         gottenBeta = true;
                         file.SendProgress = -1;
                         break;
+                    //まだ送受信されていない場合
                     case -1:
                         if (ServerCommunication.alpha)
                         {
-                            file.ReceiveFile($"BattleData_Beta", 5001);
+                            file.ReceiveFile($"BattleData_Beta", 5002);
+                        }
+                        else
+                        {
+                            string fileName = $"BattleData_Beta";
+                            ConvertorXML.SerializeBattleDataBeta(plataberus[0], Application.persistentDataPath + "/" + fileName);
+                            StartCoroutine(file.UploadFileCoroutine(fileName));
+                        }
+                        break;
+                    //送受信でエラーが発生した場合
+                    case -2:
+                        if (ServerCommunication.alpha)
+                        {
+                            file.ReceiveFile($"BattleData_Beta", 5002);
                         }
                         else
                         {
@@ -290,6 +278,53 @@ public class BattleDirector_n : MonoBehaviour
                 }
             }
         }
+    }
+
+    private int setTurn(Plataberu beru)
+    {
+        int turn = 0;
+        foreach (var com in beru.BattleCommand.SelectedCommand)
+            turn++;
+        return turn;
+    }
+
+    private void action(int num, int turn)
+    {
+        if (turn > setTurn(plataberus[num]) - 1) return;
+        plataberus[num].BattleMove(plataberus[num], plataberus[num == 0 ? 1 : 0], turn);
+    }
+    //戦闘処理をする
+    private void RunBattle()
+    {
+        //デバッグ用
+        int len = setTurn(plataberus[0]) > setTurn(plataberus[1]) ? setTurn(plataberus[0]) : setTurn(plataberus[1]);
+        Debug.Log(len);
+        for (int i = 0; i < len; i++)
+        {
+            action(0, i);
+            action(1, i);
+        }
+    }
+
+    //アニメーションを実行する
+    private void RunBattleAnimation(int beru1, int beru2, int turn)
+    {
+        //インデックス外の場合は処理をしない
+        int[] maxTurn = new int[2] { setTurn(plataberus[beru1]), setTurn(plataberus[beru2]) };
+        Debug.Log($"{maxTurn[0]} , {maxTurn[1]} , {turn} , {maxTurn[0] < turn}");
+        if (maxTurn[0] < turn) return;
+
+        //コマンドに応じたアニメションを設定
+        characterImg[beru1].CharacterAnimation
+            = plataberus[beru1].BattleCommand.SelectedCommand[turn - 1] + 4;
+
+        //ガードの有無
+        bool hadGuard = maxTurn[1] < turn ? false : plataberus[beru2].BattleCommand.SelectedCommand[turn - 1] == 1;
+
+        //被弾モーションを相手に設定する
+        if (plataberus[beru1].BattleCommand.SelectedCommand[turn - 1] == 0 && hadGuard)
+            characterImg[beru2].CharacterAnimation = 5;
+        endAnimation = false;
     }
 
     //デバッグ用

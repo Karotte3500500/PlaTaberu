@@ -4,6 +4,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 
 public class FileControl : MonoBehaviour
 {
@@ -11,14 +12,21 @@ public class FileControl : MonoBehaviour
     // サーバー設定
     private string host = "192.168.11.3";  // サーバーのIPアドレス
 
+    private string appPath;
+
     public int SendProgress = -1;
+
+    private void Start()
+    {
+        appPath = Application.persistentDataPath;
+    }
 
     public IEnumerator UploadFileCoroutine(string fileName)
     {
         SendProgress = 0;
         if (!CheckIfFileExists(fileName))
             CreateFile(fileName);
-        string path = Path.Combine(Application.persistentDataPath, $"{fileName}.xml");
+        string path = Path.Combine(appPath, $"{fileName}.xml");
 
         byte[] fileData = File.ReadAllBytes(path);
         WWWForm form = new WWWForm();
@@ -45,7 +53,7 @@ public class FileControl : MonoBehaviour
     }
     public void CreateFile(string fileName)
     {
-        string path = Path.Combine(Application.persistentDataPath, $"{fileName}.xml");
+        string path = Path.Combine(appPath, $"{fileName}.xml");
         if (!File.Exists(path))
         {
             string xmlContent = "<root>\n\t<example>Sample Data</example>\n</root>";
@@ -54,187 +62,79 @@ public class FileControl : MonoBehaviour
         }
     }
 
-    //public void ReceiveFile(string fileName, int port)
-    //{
-    //    SendProgress = 0;
-    //    try
-    //    {
-    //        string filePath = Path.Combine(Application.persistentDataPath, $"{fileName}.xml");
-
-    //        if (File.Exists(filePath))
-    //        {
-    //            File.Delete(filePath);
-    //        }
-
-    //        TcpClient client = null;
-    //        int retryCount = 3;
-    //        while (retryCount > 0)
-    //        {
-    //            try
-    //            {
-    //                client = new TcpClient(host, port);
-    //                client.ReceiveTimeout = 1800000; // 30分のタイムアウトを設定するのです
-    //                break;
-    //            }
-    //            catch
-    //            {
-    //                retryCount--;
-    //                if (retryCount == 0) throw;
-    //            }
-    //        }
-
-    //        NetworkStream stream = client.GetStream();
-
-    //        using (FileStream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
-    //        {
-    //            byte[] buffer = new byte[4096];
-    //            int bytesRead;
-
-    //            while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) > 0)
-    //            {
-    //                fileStream.Write(buffer, 0, bytesRead);
-    //            }
-    //        }
-
-    //        Debug.Log("ファイル受信が完了しました: " + filePath);
-
-    //        stream.Close();
-    //        client.Close();
-
-    //        SendProgress = 1;
-    //    }
-    //    catch (Exception e)
-    //    {
-    //        Debug.LogError("エラーが発生しました: " + e.Message);
-    //        SendProgress = -2;
-    //    }
-    //}
-
     public void ReceiveFile(string fileName, int port)
     {
-        SendProgress = 0;
-        try
-        {
-            //ファイルを保存するパス
-            string filePath = Path.Combine(Application.persistentDataPath, $"{fileName}.xml");
-
-            //ファイルが存在する場合は削除
-            if (CheckIfFileExists(filePath))
-            {
-                File.Delete(filePath);
-            }
-
-            //ソケットのセットアップとリトライ処理
-            TcpClient client = null;
-            int retryCount = 3;
-            while (retryCount > 0)
-            {
-                try
-                {
-                    client = new TcpClient(host, port);
-                    client.ReceiveTimeout = 1800000; // 3分のタイムアウトを設定
-                    break; // 接続成功
-                }
-                catch
-                {
-                    retryCount--;
-                    if (retryCount == 0) throw;
-                }
-            }
-
-            NetworkStream stream = client.GetStream();
-
-            //受信したデータをファイルに書き込み
-            using (FileStream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
-            {
-                byte[] buffer = new byte[4096];
-                int bytesRead;
-
-                //データを受信し、バッファに書き込む
-                while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) > 0)
-                {
-                    fileStream.Write(buffer, 0, bytesRead);
-                }
-            }
-
-            Debug.Log("ファイル受信が完了しました: " + filePath);
-
-            //ソケットを閉じる
-            stream.Close();
-            client.Close();
-
-            SendProgress = 1;
-        }
-        catch (Exception e)
-        {
-            Debug.LogError("エラーが発生しました: " + e.Message);
-            SendProgress = -2;
-        }
+        receiveFile(fileName, port);
     }
 
+    private async void receiveFile(string fileName, int port)
+    {
+        await receive(fileName, port);
+    }
 
-    //public void ReceiveFile(string fileName, int port)
-    //{
-    //    SendProgress = 0;
-    //    try
-    //    {
-    //        // ファイルを保存するパス
-    //        string filePath = Path.Combine(Application.persistentDataPath, $"{fileName}.xml");
+    private async Task receive(string fileName, int port)
+    {
+        await Task.Run(() =>
+        {
+            SendProgress = 0;
+            try
+            {
+                string filePath = Path.Combine(appPath, $"{fileName}.xml");
 
-    //        // ファイルが存在する場合はリセット
-    //        if (File.Exists(filePath))
-    //        {
-    //            File.Delete(filePath);
-    //        }
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
 
-    //        // ソケットのセットアップ
-    //        TcpClient client = new TcpClient(host, port);
-    //        client.ReceiveTimeout = 1800000; // 三分のタイムアウトを設定
-    //        NetworkStream stream = client.GetStream();
+                TcpClient client = null;
+                int retryCount = 3;
+                while (retryCount > 0)
+                {
+                    try
+                    {
+                        client = new TcpClient(host, port);
+                        client.ReceiveTimeout = 60000; // 30分のタイムアウト
+                        break;
+                    }
+                    catch
+                    {
+                        retryCount--;
+                        if (retryCount == 0) throw;
+                    }
+                }
 
-    //        // 受信したデータをファイルに書き込み
-    //        using (FileStream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
-    //        {
-    //            byte[] buffer = new byte[1024];
-    //            int bytesRead;
-    //            bool receiving = true;
+                NetworkStream stream = client.GetStream();
 
-    //            // データを受信し、バッファに書き込む
-    //            while (receiving)
-    //            {
-    //                bytesRead = stream.Read(buffer, 0, buffer.Length);
-    //                if (bytesRead > 0)
-    //                {
-    //                    fileStream.Write(buffer, 0, bytesRead);
-    //                }
-    //                else
-    //                {
-    //                    // データの終端に達した場合、受信を終了
-    //                    receiving = false;
-    //                }
-    //            }
-    //        }
+                using (FileStream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+                {
+                    byte[] buffer = new byte[4096];
+                    int bytesRead;
 
-    //        Debug.Log("ファイル受信が完了しました: " + filePath);
+                    while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) > 0)
+                    {
+                        fileStream.Write(buffer, 0, bytesRead);
+                    }
+                }
 
-    //        // ソケットを閉じる
-    //        stream.Close();
-    //        client.Close();
+                Debug.Log("ファイル受信が完了しました: " + filePath);
 
-    //        SendProgress = 1;
-    //    }
-    //    catch (Exception e)
-    //    {
-    //        Debug.LogError("エラーが発生しました: " + e.Message);
-    //        SendProgress = -2;
-    //    }
-    //}
+                stream.Close();
+                client.Close();
 
+                SendProgress = 1;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("エラーが発生しました: " + e.Message);
+                SendProgress = -2;
+            }
+        });
+    }
 
     //任意のファイルが存在するかどうかを確認するメソッド
     public bool CheckIfFileExists(string fileName)
     {
-        string filePath = Path.Combine(Application.persistentDataPath, $"{fileName}.xml");
+        string filePath = Path.Combine(appPath, $"{fileName}.xml");
         return File.Exists(filePath);
     }
 }

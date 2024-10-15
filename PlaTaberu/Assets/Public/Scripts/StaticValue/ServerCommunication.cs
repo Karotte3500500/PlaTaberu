@@ -14,6 +14,8 @@ public static class ServerCommunication
     public static string EnemyName = "";
     public static bool alpha = false;
 
+    public static Status collectedPlastics = new Status(20, 10, 20);
+
     /**/
     public static void SetAddress()
     {

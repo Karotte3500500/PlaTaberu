@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using System.IO;
 using System.Xml;
+using System;
 
 //XML‚É•ÏŠ·‚·‚é
 namespace XmlConverting
@@ -114,11 +115,15 @@ namespace XmlConverting
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.Load((path + ".xml"));
 
-            XmlNode pictureInfoNode = xmlDoc.SelectSingleNode("PictureInformation");
+            XmlNode pictureInfoNode = xmlDoc.SelectSingleNode("Pictureinformation");
 
-            plas.ATK = int.Parse(pictureInfoNode["RedObjects"].InnerText);
-            plas.DEF = int.Parse(pictureInfoNode["BlueObjects"].InnerText);
-            plas.HP = int.Parse(pictureInfoNode["GreenObjects"].InnerText);
+            XmlNode redObjectsNode = pictureInfoNode["RedObjects"];
+            XmlNode blueObjectsNode = pictureInfoNode["BlueObjects"];
+            XmlNode greenObjectsNode = pictureInfoNode["GreenObjects"];
+
+            plas.ATK = int.Parse(redObjectsNode.InnerText);
+            plas.DEF = int.Parse(blueObjectsNode.InnerText);
+            plas.HP = int.Parse(greenObjectsNode.InnerText);
 
             return plas;
         }

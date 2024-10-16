@@ -1,5 +1,3 @@
-using GameCharacterManagement;
-using GameCharacterManagement.Battle;
 using System;
 using System.Collections.Generic;
 

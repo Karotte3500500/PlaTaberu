@@ -1,8 +1,5 @@
 using GameCharacterManagement;
 using XmlConverting;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -34,11 +31,13 @@ public class BattleDirector_n : MonoBehaviour
 
     //終了したかどうか
     public bool EndBattle = false;
+    public int endCount = 0;
 
     /*表示されるHP*/
     public float[] displayHP = new float[2];
 
     private Commands_n commands;
+    private ControlUI controlUI;
     private FileControl file;
     private Plataberu[] plataberus = new Plataberu[2] { CharacterData._Plataberu, ServerCommunication._EnemyCharacter };
     private bool BattleRunned = false;
@@ -63,6 +62,7 @@ public class BattleDirector_n : MonoBehaviour
         menu.SetActive(false);
         file = FindObjectOfType<FileControl>();
         commands = FindObjectOfType<Commands_n>();
+        controlUI = FindObjectOfType<ControlUI>();
 
         characters = new GameObject[2] { friendImg, enemyImg };
 
@@ -94,6 +94,14 @@ public class BattleDirector_n : MonoBehaviour
         {
             MoveBattle();
         }
+
+        if (EndBattle)
+        {
+            endCount++;
+            if (endCount == 200)
+                controlUI.SwitchScene("BattleResult");
+        }
+
 
         //HPバーの処理
         setHpbar(0);

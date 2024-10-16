@@ -35,12 +35,12 @@ public class TransitionDirector : MonoBehaviour
             Image image;
             image = obj.GetComponent<Image>();
             Color color = image.color;
-            color.a += 0.02f;
+            color.a += 0.04f;
             image.color = color;
         }
 
         //180ƒtƒŒ[ƒ€‚Å‘JˆÚ
-        if (count > 180)
+        if (count > 80)
             SceneManager.LoadScene(GlobalSwitch.SwitchingScenes);
         count++;
     }

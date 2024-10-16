@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using GameCharacterManagement;
-using Unity.VisualScripting;
 
 public static class GlobalValue
 {
@@ -11,5 +7,5 @@ public static class GlobalValue
 
     public static bool _BattleResult = false;
 
-    public static int _Victory = -1;
+    public static int _Victory = 0;
 }

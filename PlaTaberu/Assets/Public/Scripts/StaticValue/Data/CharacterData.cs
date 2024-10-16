@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using GameCharacterManagement;
-using Unity.VisualScripting;
 
 public static class CharacterData
 {
@@ -12,5 +8,5 @@ public static class CharacterData
     public static float _GreenPlastic = 1000;
     public static float _BluePlastic = 1000;
 
-    public static Plataberu _Plataberu = new Belu();
+    public static Plataberu _Plataberu = new Kei();
 }

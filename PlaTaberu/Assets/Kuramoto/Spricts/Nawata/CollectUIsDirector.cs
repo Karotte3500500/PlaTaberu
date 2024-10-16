@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using XmlConverting;
 using UnityEngine.UI;
 using UnityEngine;
@@ -10,6 +8,11 @@ public class CollectUIsDirector : MonoBehaviour
     private Sprite[] infoImgs;
     [SerializeField]
     private Image infObj;
+    [SerializeField]
+    private Text timerText;
+    private float timer = 3;
+    [SerializeField]
+    private GameObject timeMess;
 
     private FileControl file;
     private ControlUI controlUI;
@@ -41,11 +44,29 @@ public class CollectUIsDirector : MonoBehaviour
                 end = true;
             }
         }
+
+        if(infoIndex == 3)
+        {
+            timer -= Time.deltaTime;
+            if (timer <= 0)
+                timer = 0;
+            timerText.text = timer == 0 ? "ストップ" : $"{(int)timer}";
+        }
+        else
+        {
+            timerText.text = "";
+            timeMess.SetActive(false);
+        }
     }
 
     public void SetImg(int num)
     {
         if ((infoIndex > 0 && infoIndex < infoImgs.Length - 1) || (infoIndex <= 0 && num > 0) || (infoIndex >= infoImgs.Length - 1 && num < 0))
             infoIndex += num;
+        if (infoIndex == 3)
+        {
+            timer = 4;
+            timeMess.SetActive(true);
+        }
     }
 }

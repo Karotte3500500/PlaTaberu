@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -8734922317007001859, guid: f1c81ad61d59a924989aa0b1ef5f38b4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.68356
+      objectReference: {fileID: 0}
     - target: {fileID: -8653719598885068355, guid: f1c81ad61d59a924989aa0b1ef5f38b4, type: 3}
       propertyPath: m_Name
       value: Grass

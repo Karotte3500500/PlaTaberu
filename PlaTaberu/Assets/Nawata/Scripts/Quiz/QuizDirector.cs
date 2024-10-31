@@ -1,9 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
-using System;
 using UnityEngine.UI;
 using UnityEngine;
-using UnityEditor;
 using GameCharacterManagement;
 
 public class QuizDirector : MonoBehaviour
@@ -33,7 +30,7 @@ public class QuizDirector : MonoBehaviour
     [SerializeField]
     private Text[] resultTexts;
 
-    private int wave = 0;
+    public int wave = 0;
     private int beforWave = -1;
     private bool isPlaying = true;
 
@@ -43,7 +40,7 @@ public class QuizDirector : MonoBehaviour
 
     private int countNum = 0;
 
-    private List<int> choice = new List<int>();
+    public List<int> choice = new List<int>();
 
     private void Start()
     {
@@ -152,7 +149,8 @@ public class QuizDirector : MonoBehaviour
     private string[] questionTexts = new string[]
     {
         "0|マイクロプラスチックは、\n5mmよりちいさい\nプラスチックのこと",
-        "1|tes",
-        "0|tes",
+        "1|マイクロプラスチックは、\nすな の ふかいところに\nたまっている",
+        "0|そとにひろがった\nマイクロプラスチックは\nすべて かいしゅうできない",
+        "1|そうちをつかうときは\nまえのひにあめが\nふってるときがいい",
     };
 }

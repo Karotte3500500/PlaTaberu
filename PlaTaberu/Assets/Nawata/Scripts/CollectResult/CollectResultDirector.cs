@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -32,7 +31,11 @@ public class CollectResultDirector : MonoBehaviour
             num++;
         }
         plastics = shuffleList(plastics);
+        CharacterData._RedPlastic += ServerCommunication.collectedPlastics.ATK * 100;
+        CharacterData._BluePlastic += ServerCommunication.collectedPlastics.DEF * 100;
+        CharacterData._GreenPlastic += ServerCommunication.collectedPlastics.HP * 100;
 
+        Debug.Log($"RED:{ServerCommunication.collectedPlastics.ATK}");
 
         //string mess = "";
         //foreach (var pla in plastics)

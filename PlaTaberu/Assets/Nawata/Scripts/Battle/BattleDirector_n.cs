@@ -84,6 +84,14 @@ public class BattleDirector_n : MonoBehaviour
 
     private void Update()
     {
+        //終了処理
+        if (EndBattle && commands.choicing)
+        {
+            endCount++;
+            if (endCount == 200)
+                controlUI.SwitchScene("BattleResult");
+        }
+
         /*メニューが開いているなら処理を中止する*/
         OpeningMenu = menu.activeSelf || EndBattle;
         decide.interactable = !OpeningMenu;
@@ -94,14 +102,6 @@ public class BattleDirector_n : MonoBehaviour
         {
             MoveBattle();
         }
-
-        if (EndBattle)
-        {
-            endCount++;
-            if (endCount == 200)
-                controlUI.SwitchScene("BattleResult");
-        }
-
 
         //HPバーの処理
         setHpbar(0);
@@ -138,7 +138,9 @@ public class BattleDirector_n : MonoBehaviour
                     int num = (count / 100);
                     endAnimation = true;
 
-                    var damages = plataberus[1 - (num % 2)].DamagesInflicted;
+                    Debug.Log($"{plataberus[1 - (num % 2)].Name},{plataberus[1 - (num % 2)].DamagesSuffered:0.00}");
+
+                    var damages = plataberus[1 - (num % 2)].DamagesSuffered;
                     if (damages.Count >= turnCount)
                         displayHP[1 - (num % 2)] -= damages[turnCount - 1];
                 }
@@ -186,105 +188,10 @@ public class BattleDirector_n : MonoBehaviour
         }
         else
         {
-            /*デバッグ用*/
-            //EnemyCommandSet();
-            Debug.Log(plataberus[0].DebugString());
-            Debug.Log(plataberus[1].DebugString());
-            //betaファイルが届いたなら
-            if (gottenBeta)
-            {
-                ////****ここの処理は不安なので要確認****////
-                //ファイルの送受信状態を確認
-                switch (file.SendProgress)
-                {
-                    //正常に送受信できた場合
-                    case 1:
-                        if (!ServerCommunication.alpha)
-                        {
-                            var data
-                                = ConvertorXML.DeserializeBattleDataAlpha(Application.persistentDataPath + $"/BattleData_Alpha").WriteData(plataberus[0], plataberus[1]);
-                            plataberus[0] = data.Friend;
-                            plataberus[1] = data.Enemy;
-                            RunBattle();
-                        }
-                        gottenBeta = true;
-                        file.SendProgress = -1;
-                        break;
-                    //まだ送受信されていない場合
-                    case -1:
-                        if (!ServerCommunication.alpha)
-                        {
-                            file.ReceiveFile($"BattleData_Alpha", 5002);
-                        }
-                        else
-                        {
-                            RunBattle();
-                            string fileName = $"BattleData_Alpha";
-                            ConvertorXML.SerializeBattleDataAlpha(plataberus[0], plataberus[1], Application.persistentDataPath + "/" + fileName);
-                            StartCoroutine(file.UploadFileCoroutine(fileName));
-                        }
-                        break;
-                    //送受信でエラーが発生した場合
-                    case -2:
-                        if (!ServerCommunication.alpha)
-                        {
-                            file.ReceiveFile($"BattleData_Alpha", 5002);
-                        }
-                        else
-                        {
-                            RunBattle();
-                            string fileName = $"BattleData_Alpha";
-                            ConvertorXML.SerializeBattleDataAlpha(plataberus[0], plataberus[1], Application.persistentDataPath + "/" + fileName);
-                            StartCoroutine(file.UploadFileCoroutine(fileName));
-                        }
-                        break;
-                }
-                ////////////////////////////////////////////////////
-                count = 0;
-                BattleRunned = true;
-            }
-            //betaファイルが届いていないなら
+            if (GlobalSwitch._IsMultiplayer)
+                serverCom();
             else
-            {
-                //ファイルの送受信状態を確認
-                switch (file.SendProgress)
-                {
-                    //正常に送受信できた場合
-                    case 1:
-                        if (ServerCommunication.alpha)
-                            plataberus[1]
-                                = ConvertorXML.DeserializeBattleDataBeta(Application.persistentDataPath + $"/BattleData_Beta").WriteData(plataberus[1]);
-                        gottenBeta = true;
-                        file.SendProgress = -1;
-                        break;
-                    //まだ送受信されていない場合
-                    case -1:
-                        if (ServerCommunication.alpha)
-                        {
-                            file.ReceiveFile($"BattleData_Beta", 5002);
-                        }
-                        else
-                        {
-                            string fileName = $"BattleData_Beta";
-                            ConvertorXML.SerializeBattleDataBeta(plataberus[0], Application.persistentDataPath + "/" + fileName);
-                            StartCoroutine(file.UploadFileCoroutine(fileName));
-                        }
-                        break;
-                    //送受信でエラーが発生した場合
-                    case -2:
-                        if (ServerCommunication.alpha)
-                        {
-                            file.ReceiveFile($"BattleData_Beta", 5002);
-                        }
-                        else
-                        {
-                            string fileName = $"BattleData_Beta";
-                            ConvertorXML.SerializeBattleDataBeta(plataberus[0], Application.persistentDataPath + "/" + fileName);
-                            StartCoroutine(file.UploadFileCoroutine(fileName));
-                        }
-                        break;
-                }
-            }
+                soloBattle();
         }
     }
 
@@ -349,6 +256,121 @@ public class BattleDirector_n : MonoBehaviour
     {
         hpBar[num].GetComponent<HPbar_n>().MaxValue = plataberus[num].ActualStatus.HP;
         hpBar[num].GetComponent<HPbar_n>().NowValue = displayHP[num] <= 0 ? 0 : displayHP[num];
+    }
+
+    //マルチプレイ（サーバー経由）
+    private void serverCom()
+    {
+        /*デバッグ用*/
+        //EnemyCommandSet();
+        Debug.Log(plataberus[0].DebugString());
+        Debug.Log(plataberus[1].DebugString());
+        //betaファイルが届いたなら
+        if (gottenBeta)
+        {
+            ////****ここの処理は不安なので要確認****////
+            //ファイルの送受信状態を確認
+            switch (file.SendProgress)
+            {
+                //正常に送受信できた場合
+                case 1:
+                    if (!ServerCommunication.alpha)
+                    {
+                        var data
+                            = ConvertorXML.DeserializeBattleDataAlpha(Application.persistentDataPath + $"/BattleData_Alpha").WriteData(plataberus[0], plataberus[1]);
+                        plataberus[0] = data.Friend;
+                        plataberus[1] = data.Enemy;
+                        RunBattle();
+                    }
+                    gottenBeta = true;
+                    file.SendProgress = -1;
+                    count = 0;
+                    BattleRunned = true;
+                    break;
+                //まだ送受信されていない場合
+                case -1:
+                    if (!ServerCommunication.alpha)
+                    {
+                        file.ReceiveFile($"BattleData_Alpha", 5002);
+                    }
+                    else
+                    {
+                        RunBattle();
+                        string fileName = $"BattleData_Alpha";
+                        ConvertorXML.SerializeBattleDataAlpha(plataberus[0], plataberus[1], Application.persistentDataPath + "/" + fileName);
+                        StartCoroutine(file.UploadFileCoroutine(fileName));
+                    }
+                    break;
+                //送受信でエラーが発生した場合
+                case -2:
+                    //修正予定*************************************
+                    if (!ServerCommunication.alpha)
+                    {
+                        file.ReceiveFile($"BattleData_Alpha", 5002);
+                    }
+                    else
+                    {
+                        RunBattle();
+                        string fileName = $"BattleData_Alpha";
+                        ConvertorXML.SerializeBattleDataAlpha(plataberus[0], plataberus[1], Application.persistentDataPath + "/" + fileName);
+                        StartCoroutine(file.UploadFileCoroutine(fileName));
+                    }
+                    break;
+            }
+            ////////////////////////////////////////////////////
+        }
+        //betaファイルが届いていないなら
+        else
+        {
+            //ファイルの送受信状態を確認
+            switch (file.SendProgress)
+            {
+                //正常に送受信できた場合
+                case 1:
+                    if (ServerCommunication.alpha)
+                        plataberus[1]
+                            = ConvertorXML.DeserializeBattleDataBeta(Application.persistentDataPath + $"/BattleData_Beta").WriteData(plataberus[1]);
+                    gottenBeta = true;
+                    file.SendProgress = -1;
+                    break;
+                //まだ送受信されていない場合
+                case -1:
+                    if (ServerCommunication.alpha)
+                    {
+                        file.ReceiveFile($"BattleData_Beta", 5002);
+                    }
+                    else
+                    {
+                        string fileName = $"BattleData_Beta";
+                        ConvertorXML.SerializeBattleDataBeta(plataberus[0], Application.persistentDataPath + "/" + fileName);
+                        StartCoroutine(file.UploadFileCoroutine(fileName));
+                    }
+                    break;
+                //送受信でエラーが発生した場合
+                case -2:
+                    //修正予定*************************************
+                    if (ServerCommunication.alpha)
+                    {
+                        file.ReceiveFile($"BattleData_Beta", 5002);
+                    }
+                    else
+                    {
+                        string fileName = $"BattleData_Beta";
+                        ConvertorXML.SerializeBattleDataBeta(plataberus[0], Application.persistentDataPath + "/" + fileName);
+                        StartCoroutine(file.UploadFileCoroutine(fileName));
+                    }
+                    break;
+            }
+        }
+    }
+
+    //ソロプレイ時の処理
+    private void soloBattle()
+    {
+        EnemyCommandSet();
+        RunBattle();
+        count = 0;
+        BattleRunned = true;
     }
 
     public void OpenMenu()

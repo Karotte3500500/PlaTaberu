@@ -508,6 +508,8 @@ MonoBehaviour:
   - {fileID: 1619695891}
   - {fileID: 1963901867}
   - {fileID: 1293361307}
+  wave: 0
+  choice: 
 --- !u!1 &362147471
 GameObject:
   m_ObjectHideFlags: 0
@@ -600,6 +602,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0352a7cd8de6d044e9bfeebcfdaec42f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  expMess: {fileID: 372380063}
 --- !u!1 &372380061
 GameObject:
   m_ObjectHideFlags: 0

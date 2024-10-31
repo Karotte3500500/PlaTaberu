@@ -1,8 +1,7 @@
-using GameCharacterManagement;
 using XmlConverting;
 using UnityEngine.UI;
 using UnityEngine;
-using System.IO;
+
 
 public class ToBattleDirector : MonoBehaviour
 {

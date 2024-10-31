@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public static class GlobalSwitch
 {
@@ -11,4 +7,6 @@ public static class GlobalSwitch
     public static string SwitchingScenes = "Start";
     //Bookで表示するキャラクターのID
     public static int _CharacterID = 1;
+    //マルチかソロか（trueならマルチ,falseならソロ）
+    public static bool _IsMultiplayer = false;
 }

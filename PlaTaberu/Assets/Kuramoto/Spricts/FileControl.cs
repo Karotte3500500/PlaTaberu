@@ -26,7 +26,7 @@ public class FileControl : MonoBehaviour
         SendProgress = 0;
         if (!CheckIfFileExists(fileName))
             CreateFile(fileName);
-        string path = Path.Combine(appPath, $"{fileName}.xml");
+        string path = makePath(fileName);
 
         byte[] fileData = File.ReadAllBytes(path);
         WWWForm form = new WWWForm();
@@ -53,7 +53,7 @@ public class FileControl : MonoBehaviour
     }
     public void CreateFile(string fileName)
     {
-        string path = Path.Combine(appPath, $"{fileName}.xml");
+        string path = makePath(fileName);
         if (!File.Exists(path))
         {
             string xmlContent = "<root>\n\t<example>Sample Data</example>\n</root>";
@@ -79,7 +79,7 @@ public class FileControl : MonoBehaviour
             SendProgress = 0;
             try
             {
-                string filePath = Path.Combine(appPath, $"{fileName}.xml");
+                string filePath = makePath(fileName);
 
                 if (File.Exists(filePath))
                 {
@@ -134,7 +134,15 @@ public class FileControl : MonoBehaviour
     //任意のファイルが存在するかどうかを確認するメソッド
     public bool CheckIfFileExists(string fileName)
     {
-        string filePath = Path.Combine(appPath, $"{fileName}.xml");
+        string filePath = makePath(fileName);
         return File.Exists(filePath);
+    }
+
+    private string makePath(string fileName)
+    {
+        if (!fileName.Contains("."))
+            fileName += ".xml";
+
+        return Path.Combine(appPath, fileName);
     }
 }

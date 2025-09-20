@@ -60,7 +60,7 @@ public class HomeDirector_n : MonoBehaviour
         typeBack.GetComponent<Image>().color = color;
     }
 
-    public void OpenMenue()
+    public void OpenMenu()
     {
         menue.SetActive(true);
     }
@@ -68,11 +68,11 @@ public class HomeDirector_n : MonoBehaviour
     {
         //PlayerData.SavePlayerData();
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
-        #else
-              Application.Quit();
-        #endif
+#else
+        Application.Quit();
+#endif
     }
 
     public void ContinueApp()
